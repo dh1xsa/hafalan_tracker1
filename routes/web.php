@@ -16,6 +16,8 @@ use App\Http\Controllers\studentController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
 //Middleware agar route tidak bisa diakses jika sudah melakukan Login
 Route::middleware(['logged'])->group(function () {
     // Route Login buat guru (user)
