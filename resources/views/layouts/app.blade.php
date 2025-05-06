@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard')</title>
     @vite('resources/css/app.css')
 </head>
+
 <body class="bg-gray-100 text-gray-800">
 
     {{-- Navbar --}}
@@ -22,7 +24,12 @@
                 <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Dashboard</a></li>
                 <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Murid</a></li>
                 <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Hafalan</a></li>
-                <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Logout</a></li>
+                <li>
+                    <form action="{{ route('student-logout') }}" method="POST">
+                        @csrf
+                        <button type="submit">logout</button>
+                    </form>
+                </li>
             </ul>
         </aside>
 
@@ -38,4 +45,5 @@
     </footer>
 
 </body>
+
 </html>
