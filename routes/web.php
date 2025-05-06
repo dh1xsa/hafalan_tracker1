@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\adminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\studentLoginController;
 use App\Http\Controllers\userLoginController;
@@ -47,4 +48,9 @@ Route::middleware(['auth.user'])->group(function () {
 Route::middleware(['auth.student'])->group(function () {
     Route::post('/student-logout', [studentLoginController::class, 'logout'])->name('student-logout');
     Route::get('/student-dashboard', [studentController::class, 'dashboard'])->name('student-dashboard');
+});
+
+Route::middleware(['auth.admin'])->group(function () {
+    //
+    Route::get('/admin-dashboard', [adminController::class, 'dashboard'])->name('admin-dashboard');
 });

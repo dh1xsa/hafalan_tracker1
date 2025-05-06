@@ -8,11 +8,11 @@ use App\Models\user;
 
 class adminController extends Controller
 {
-    // public function index()
-    // {
-    //     $user = user::where('student_id', session('student_id'))->get();
-    //     $student = student::where('id', session('student_id'))->get();
+    public function dashboard()
+    {
+        $user = user::where('level', 2)->get();
+        $student = student::all();
 
-    //     return view('')
-    // }
+        return view('admin.dashboard',compact('user','student'));
+    }
 }
