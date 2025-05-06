@@ -3,8 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\student;
+use App\Models\user;
 
 class adminController extends Controller
 {
-   
+    // public function index()
+    // {
+    //     $user = user::where('student_id', session('student_id'))->get();
+    //     $student = student::where('id', session('student_id'))->get();
+
+    //     return view('')
+    // }
 }
