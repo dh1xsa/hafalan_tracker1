@@ -51,6 +51,15 @@ Route::middleware(['auth.student'])->group(function () {
 });
 
 Route::middleware(['auth.admin'])->group(function () {
+    Route::view('/admin-dashboard','admin.dashboard');
     //
-    Route::get('/admin-dashboard', [adminController::class, 'dashboard'])->name('admin-dashboard');
+    Route::get('/admin-user-dashboard', [adminController::class, 'dashboard'])->name('admin-user-dashboard');
+    Route::post('/admin-user-dashboard', [adminController::class, 'store'])->name('admin-user-store');
+    Route::get('/edit-user/{id}', [adminController::class, 'edit'])->name('admin-user-edit');
+    Route::put('/edit-user/{id}', [adminController::class, 'update'])->name('admin-user-update');
+    //
+    Route::get('/admin-student-dashboard', [adminController::class, 'student_dashboard'])->name('admin-student-dashboard');
+    Route::post('/admin-student-dashboard', [adminController::class, 'student_store'])->name('admin-student-store');
+    Route::get('/edit-student/{id}', [adminController::class, 'student_edit'])->name('admin-student-edit');
+    Route::put('/edit-student/{id}', [adminController::class, 'student_update'])->name('admin-student-update');
 });
