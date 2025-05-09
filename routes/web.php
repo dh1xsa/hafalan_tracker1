@@ -24,8 +24,8 @@ Route::middleware(['logged'])->group(function () {
     Route::post('/user-login', [userLoginController::class, 'login'])->name('user-login');
 
     // Route Login buat murid
-    Route::get('/student-login', [studentLoginController::class, 'showLogin']);
-    Route::post('/student-login', [studentLoginController::class, 'login'])->name('student-login');
+    Route::get('/', [studentLoginController::class, 'showLogin']);
+    Route::post('/', [studentLoginController::class, 'login'])->name('student-login');
 });
 
 // Midlleware agar Route hanya bisa diakses oleh guru(user)
