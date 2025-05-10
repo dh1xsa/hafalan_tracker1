@@ -12,7 +12,7 @@
     <div class="w-full max-w-md p-8 bg-white shadow-md rounded-xl">
         <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Login Siswa</h2>
 
-        <form action="/student-login" method="POST" class="space-y-4">
+        <form action="{{ route('student-login') }}" method="POST" class="space-y-4">
             @csrf
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Username</label>
