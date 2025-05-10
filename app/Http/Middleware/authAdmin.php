@@ -27,7 +27,7 @@ class authAdmin
 
         // Jika yang login adalah student, redirect ke login student
         if (session()->has('student_id')) {
-            return redirect('/student-login')->with('error', 'Silakan login sebagai guru.');
+            return redirect('/')->with('error', 'Silakan login sebagai guru.');
         }
 
         // Default redirect jika login tapi bukan level 1
