@@ -3,7 +3,7 @@
 @section('title', 'Data Murid')
 
 @section('content')
-    <h2 class="text-2xl font-semibold mb-4">Murid</h2>
+    <h2 class="text-2xl font-semibold mb-4">Hafalanmu</h2>
 
     @foreach ($student as $data)
         <p class="text-lg font-medium text-blue-700">{{ $data->name }}</p>
