@@ -1,44 +1,73 @@
-<h1><b>Guru</b></h1>
-<form action="{{ route('user-logout') }}" method="POST">
+@extends('layouts.admin')
+
+@section('title', 'Dashboard Guru')
+
+@section('content')
+
+<form action="{{ route('user-store') }}" method="POST" class="max-w-7xl mx-auto bg-white p-6 rounded shadow">
     @csrf
-    <button type="submit">logout</button>
+
+    <!-- Select Student -->
+    <div class="mb-4">
+        <label for="student_id" class="block text-sm font-medium text-gray-700 mb-1">Pilih Murid</label>
+        <select name="student_id" id="student_id" class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            @foreach ($student as $data)
+                <option value="{{ $data->id }}">{{ $data->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <!-- Input Hafalan -->
+    <div class="mb-4">
+        <label for="hafalan" class="block text-sm font-medium text-gray-700 mb-1">Hafalan</label>
+        <input type="text" id="hafalan" name="hafalan" placeholder="Masukkan hafalan"
+            class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
+    <!-- Input Deskripsi -->
+    <div class="mb-4">
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+        <input type="text" id="description" name="description" placeholder="Deskripsi"
+            class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
+    <!-- Input Tanggal -->
+    <div class="mb-6">
+        <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Setoran</label>
+        <input type="date" id="date" name="date"
+            class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        Submit
+    </button>
 </form>
-@if(session('success'))
-<p style="color:green;">{{ session('success') }}</p>
-@else
-<p style="color:red;">{{ session('error') }}</p>
-@endif
 
-<form action="{{ route('user-store')}}" method="post">
-    @csrf
-    <select name="student_id">
-        @foreach ($student as $data )
-        <option value="{{ $data->id }}">{{ $data->name }}</option>
-        @endforeach
-    </select>
-    <input type="text" name="hafalan">
-    <input type="text" name="description">
-    <input type="date" name="date">
+<!-- Tabel Murid -->
+<div class="max-w-9xl mx-auto mt-10">
+    <table class="min-w-full divide-y divide-gray-200 border rounded shadow overflow-hidden">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nama Murid</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Aksi</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @foreach ($student as $data)
+                <tr>
+                    <td class="px-6 py-4 text-gray-900">{{ $data->name }}</td>
+                    <td class="px-6 py-4">
+                        <a href="{{ route('student-detail', $data->id) }}"
+                           class="text-blue-600 hover:underline">
+                            Cek detail hafalan
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 
-    <button type="submit">Submit</button>
-
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>Nama Murid</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($student as $data )
-        <tr>
-            <td>{{ $data->name }}</td>
-            <td>
-                <a href="{{ route('student-detail',$data->id) }}">cek detail hafalan</a>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+@endsection

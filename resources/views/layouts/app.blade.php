@@ -22,7 +22,14 @@
                 <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Dashboard</a></li>
                 <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Murid</a></li>
                 <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Hafalan</a></li>
-                <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Logout</a></li>
+                <li>
+                    <form action="{{ route('student-logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" 
+                        onclick="return confirm('Apakah kamu yakin ingin keluar?')"
+                        class="block py-2 px-3 rounded hover:bg-blue-100">Logout</button>
+                    </form>
+                </li>
             </ul>
         </aside>
 

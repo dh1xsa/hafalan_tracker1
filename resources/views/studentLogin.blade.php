@@ -33,6 +33,9 @@
                 </button>
             </div>
         </form>
+        @if($errors->has('login'))
+            <div class="alert alert-danger">{{ $errors->first('login') }}</div>
+        @endif
     </div>
 
 </body>

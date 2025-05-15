@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Data Murid')
+@section('title', 'Dashboard Murid')
 
 @section('content')
     <h2 class="text-2xl font-semibold mb-4">Murid</h2>
