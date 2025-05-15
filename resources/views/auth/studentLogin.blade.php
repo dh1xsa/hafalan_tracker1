@@ -17,13 +17,13 @@
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Username</label>
                 <input type="text" id="name" name="name" placeholder="Masukkan username"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" id="password" name="password" placeholder="Masukkan password"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
