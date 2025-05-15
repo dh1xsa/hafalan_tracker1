@@ -16,7 +16,7 @@ class authStudent
     public function handle(Request $request, Closure $next)
 {
     if (!session()->has('student_id')) {
-        return redirect('/student-login')->with('error', 'Login Murid diperlukan.');
+        return redirect('/')->with('error', 'Login Murid diperlukan.');
     }
 
     return $next($request);

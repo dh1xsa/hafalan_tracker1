@@ -28,6 +28,6 @@ class studentLoginController extends Controller
     public function logout()
     {
         session()->forget('student_id');
-        return redirect('/student-login');
+        return redirect('/');
     }
 }

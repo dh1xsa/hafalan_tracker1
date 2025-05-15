@@ -1,21 +1,12 @@
 <?php
 
+use App\Http\Controllers\adminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\studentLoginController;
 use App\Http\Controllers\userLoginController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\studentController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 //Middleware agar route tidak bisa diakses jika sudah melakukan Login
 Route::middleware(['logged'])->group(function () {
     // Route Login buat guru (user)
@@ -23,8 +14,8 @@ Route::middleware(['logged'])->group(function () {
     Route::post('/user-login', [userLoginController::class, 'login'])->name('user-login');
 
     // Route Login buat murid
-    Route::get('/student-login', [studentLoginController::class, 'showLogin']);
-    Route::post('/student-login', [studentLoginController::class, 'login'])->name('student-login');
+    Route::get('/', [studentLoginController::class, 'showLogin']);
+    Route::post('/', [studentLoginController::class, 'login'])->name('student-login');
 });
 
 // Midlleware agar Route hanya bisa diakses oleh guru(user)
@@ -47,4 +38,18 @@ Route::middleware(['auth.user'])->group(function () {
 Route::middleware(['auth.student'])->group(function () {
     Route::post('/student-logout', [studentLoginController::class, 'logout'])->name('student-logout');
     Route::get('/student-dashboard', [studentController::class, 'dashboard'])->name('student-dashboard');
+});
+
+Route::middleware(['auth.admin'])->group(function () {
+    Route::view('/admin-dashboard','admin.dashboard')->name('admin-dashboard');
+    //
+    Route::get('/admin-user-dashboard', [adminController::class, 'dashboard'])->name('admin-user-dashboard');
+    Route::post('/admin-user-dashboard', [adminController::class, 'store'])->name('admin-user-store');
+    Route::get('/edit-user/{id}', [adminController::class, 'edit'])->name('admin-user-edit');
+    Route::put('/edit-user/{id}', [adminController::class, 'update'])->name('admin-user-update');
+    //
+    Route::get('/admin-student-dashboard', [adminController::class, 'student_dashboard'])->name('admin-student-dashboard');
+    Route::post('/admin-student-dashboard', [adminController::class, 'student_store'])->name('admin-student-store');
+    Route::get('/edit-student/{id}', [adminController::class, 'student_edit'])->name('admin-student-edit');
+    Route::put('/edit-student/{id}', [adminController::class, 'student_update'])->name('admin-student-update');
 });
