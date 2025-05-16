@@ -23,14 +23,12 @@
     <div id="mobileMenu"
          class="absolute top-full left-0 right-0 bg-white shadow-md rounded-b-md overflow-hidden max-h-0 transition-max-height duration-300 ease-in-out z-40"
          style="max-height: 0;">
-
-        <form action="{{ route('user-logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded">
-            Logout
-          </button>
-        </form>
-      </nav>
+      <form action="{{ route('student-logout') }}" method="POST" class="p-4">
+        @csrf
+        <button type="submit" class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded">
+          Logout
+        </button>
+      </form>
     </div>
   </nav>
 
@@ -52,7 +50,7 @@
           Guru
         </a>
       </nav>
-      <form action="{{ route('user-logout') }}" method="POST" class="p-4">
+      <form action="{{ route('student-logout') }}" method="POST" class="p-4">
         @csrf
         <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded">Logout</button>
       </form>
@@ -76,7 +74,7 @@
       }
     });
 
-    // Optional: tutup menu kalau klik di luar
+    // Tutup menu jika klik di luar area menu dan tombol
     document.addEventListener('click', function(e) {
       if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
         mobileMenu.style.maxHeight = '0';
