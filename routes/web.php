@@ -8,7 +8,7 @@ use App\Http\Controllers\studentController;
 
 //Middleware agar route tidak bisa diakses jika sudah melakukan Login
 Route::get('/', function() {
-    return view('index');
+    return view('studentLogin');
 });
 
 Route::middleware(['logged'])->group(function () {
