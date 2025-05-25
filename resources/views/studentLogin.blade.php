@@ -42,7 +42,6 @@
     <!-- Background Image -->
     <div class="hidden md:block md:w-2/3 bg-cover bg-center relative"
          style="background-image: url('/assets/images/17.jpg');">
-      <!-- Optional: overlay if needed -->
       <div class="absolute inset-0 bg-black bg-opacity-30"></div>
     </div>
   </div>
