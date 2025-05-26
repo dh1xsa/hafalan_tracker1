@@ -9,7 +9,6 @@
 <body class="bg-gray-100 text-gray-800">
 
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         <aside class="w-64 bg-white shadow-md hidden md:block">
             <div class="p-6 text-center font-bold text-lg border-b">Admin Panel</div>
             <nav class="p-4 space-y-4">
@@ -28,8 +27,6 @@
                 <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded">Logout</button>
             </form>
         </aside>
-
-        <!-- Main content -->
         <main class="flex-1 p-6">
             @yield('content')
         </main>
