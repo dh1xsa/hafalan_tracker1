@@ -56,18 +56,23 @@ class adminController extends Controller
     public function student_dashboard()
     {
         $user = user::where('level', 2)->get();
-        $student = student::with('user')->get();
+        $students = student::with('user')
+            ->orderBy('user_id')  // pastikan urut dulu
+            ->orderBy('name')     // opsional: urutkan nama murid dalam kelompok
+            ->get()
+            ->groupBy('user_id'); // hasilnya adalah Collection yang terkelompok
 
-        return view('admin.dashboard-student', compact('user', 'student'));
+        return view('admin.dashboard-student', compact('students', 'user'));
     }
+
 
     public function student_store(Request $request)
     {
         $validated = $request->validate([
-            'user_id'=> 'required',
+            'user_id' => 'required',
             'name' => 'required',
             'password' => 'required',
-        ]);        
+        ]);
 
         if (student::create($validated)) {
             return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
@@ -80,7 +85,7 @@ class adminController extends Controller
     {
         $student = student::findOrFail($id);
         $user = user::all();
-        return view('admin.edit-student', compact('student','user'));
+        return view('admin.edit-student', compact('student', 'user'));
     }
 
     // Proses update data

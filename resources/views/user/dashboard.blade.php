@@ -4,17 +4,6 @@
 
 <h1 class="text-2xl font-bold mb-6">Panel Guru</h1>
 
-<!-- Logout & Notifikasi -->
-<div class="flex justify-between items-center mb-6">
-
-
-    @if(session('success'))
-        <p class="text-green-600">{{ session('success') }}</p>
-    @elseif(session('error'))
-        <p class="text-red-600">{{ session('error') }}</p>
-    @endif
-</div>
-
 <!-- Form Hafalan -->
 <div class="bg-white p-6 rounded shadow mb-8 max-w-xl">
     <h2 class="text-lg font-semibold mb-4">Input Hafalan Murid</h2>
