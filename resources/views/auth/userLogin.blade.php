@@ -90,7 +90,7 @@
             background: none;
             font-weight: 700;
             transition: .2s;
-            color: white;
+            color: #6d6d6d;
         }
 
         .login__input:focus {
