@@ -83,15 +83,19 @@
         }
 
         .login__input {
-            width: 100%;
-            padding: 10px 10px 10px 34px;
-            border: none;
-            border-bottom: 2px solid #D1D1D4;
-            background: none;
-            font-weight: 700;
-            transition: .2s;
-            color: white;
-        }
+      width: 100%;
+      padding: 10px 10px 10px 34px;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.1);
+      font-weight: 700;
+      transition: .2s;
+      color: #6d6d6d; /* putih terang */
+    }
+    /* placeholder agar lebih jelas */
+    .login__input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
 
         .login__input:focus {
             outline: none;
