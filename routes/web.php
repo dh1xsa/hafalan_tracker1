@@ -32,6 +32,12 @@ Route::middleware(['auth.user'])->group(function () {
     Route::put('/edit-hafalan/{id}', [UserController::class, 'update'])->name('hafalan-update');
     //menghapus data hafalan siswa
     Route::delete('/student-detail/{id}', [userController::class, 'destroy'])->name('hafalan-destroy');
+
+    Route::get('/user/student/{id}/export-pdf', [userController::class, 'exportPDF'])->name('student-detail.pdf');
+
+   
+Route::get('/search-students', [StudentController::class, 'search'])->name('students.search');
+
 });
 
 // Midlleware agar Route hanya bisa diakses oleh murid yang sudah login

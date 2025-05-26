@@ -14,4 +14,16 @@ class studentController extends Controller
 
         return view('student.dashboard',compact('student','hafalan'));
     }
+    public function search(Request $request)
+    {
+        $keyword = $request->query('q', '');
+        $userId  = session('user_id');
+
+        // Hanya cari murid milik guru yang sedang login
+        $students = Student::where('user_id', $userId)
+            ->where('name', 'LIKE', "%{$keyword}%")
+            ->get(['id','name']);
+
+        return response()->json($students);
+    }
 }

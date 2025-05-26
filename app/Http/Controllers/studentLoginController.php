@@ -1,33 +1,52 @@
 <?php
 
+// app/Http/Controllers/StudentLoginController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\student;
+use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 
-class studentLoginController extends Controller
+class StudentLoginController extends Controller
 {
+    /**
+     * Tampilkan halaman login siswa
+     */
     public function showLogin()
     {
         return view('auth.studentLogin');
     }
 
+    /**
+     * Proses login siswa
+     */
     public function login(Request $request)
     {
-        $student = student::where('name', $request->name)->first();
+        // Validasi input
+        $request->validate([
+            'name'     => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $student = Student::where('name', $request->name)->first();
 
         if (!$student || !Hash::check($request->password, $student->password)) {
-            return back()->with('error', 'Login gagal.');
+            return back()->with('error', 'Login gagal: username atau password salah.');
         }
 
+        // Simpan session dan redirect ke dashboard
         session(['student_id' => $student->id]);
-        return redirect('/student-dashboard');
+        return redirect('/student-dashboard')->with('success', 'Login berhasil! Selamat datang, ' . $student->name);
     }
 
+    /**
+     * Proses logout siswa
+     */
     public function logout()
     {
         session()->forget('student_id');
-        return redirect('/');
+        return redirect('/')->with('success', 'Anda telah logout.');
     }
+
+   
 }
