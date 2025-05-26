@@ -90,18 +90,19 @@ class adminController extends Controller
 
     // Proses update data
     public function student_update(Request $request, $id)
-    {
-        $request->validate([
-            'user_id'     => 'required',
-            'name'     => 'required',
-        ]);
+{
+    $request->validate([
+        'user_id' => 'required',
+        'name'    => 'required',
+    ]);
 
-        $hafalan = user::findOrFail($id);
-        $hafalan->update([
-            'user_id'     => $request->user_id,
-            'name'     => $request->name,
-        ]);
+    $student = student::findOrFail($id);
+    $student->update([
+        'user_id' => $request->user_id,
+        'name'    => $request->name,
+    ]);
 
-        return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
-    }
+    return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
+}
+
 }

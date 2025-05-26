@@ -6,13 +6,6 @@
 
     <!-- Logout & Notifikasi -->
     <div class="flex justify-between items-center mb-6">
-        <form action="{{ route('user-logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                Logout
-            </button>
-        </form>
-
         @if(session('success'))
             <p class="text-green-600">{{ session('success') }}</p>
         @elseif(session('error'))
@@ -20,8 +13,14 @@
         @endif
     </div>
 
-    <!-- Form Tambah Guru -->
-    <div class="bg-white p-6 rounded shadow mb-8 max-w-xl">
+    <!-- Tombol untuk toggle form -->
+    <button id="toggleFormBtn" 
+            class="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        Tambah Guru
+    </button>
+
+    <!-- Form Tambah Guru (default disembunyikan) -->
+    <div id="formTambahGuru" class="bg-white p-6 rounded shadow mb-8 max-w-xl hidden">
         <h2 class="text-lg font-semibold mb-4">Tambah Guru Baru</h2>
         <form action="{{ route('admin-user-store') }}" method="POST" class="space-y-4">
             @csrf
@@ -71,5 +70,12 @@
             </table>
         </div>
     </div>
+
+    <script>
+        document.getElementById('toggleFormBtn').addEventListener('click', function() {
+            const form = document.getElementById('formTambahGuru');
+            form.classList.toggle('hidden');
+        });
+    </script>
 
 @endsection

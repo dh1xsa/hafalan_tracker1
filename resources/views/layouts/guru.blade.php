@@ -10,7 +10,7 @@
 
   {{-- Navbar Mobile --}}
   <nav class="bg-white shadow px-4 py-4 flex justify-between items-center md:hidden relative">
-    <h1 class="text-lg font-bold text-blue-600">Admin Panel</h1>
+    <h1 class="text-lg font-bold text-blue-600">Panel guru</h1>
     <button id="mobileMenuBtn" aria-label="Toggle menu" class="focus:outline-none">
       <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
            xmlns="http://www.w3.org/2000/svg">
@@ -37,19 +37,11 @@
   <div class="flex min-h-screen">
     <!-- Sidebar (Desktop) -->
     <aside class="w-64 bg-white shadow-md hidden md:block">
-      <div class="p-6 text-center font-bold text-lg border-b">Admin Panel</div>
+      <div class="p-6 text-center font-bold text-lg border-b">Panel Guru</div>
       <nav class="p-4 space-y-4">
         <a href="{{ route('admin-dashboard') }}"
            class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
           Dashboard
-        </a>
-        <a href="{{ route('admin-student-dashboard') }}"
-           class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-student-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
-          Murid
-        </a>
-        <a href="{{ route('admin-user-dashboard') }}"
-           class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-user-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
-          Guru
         </a>
       </nav>
       <form action="{{ route('user-logout') }}" method="POST" class="p-4">
