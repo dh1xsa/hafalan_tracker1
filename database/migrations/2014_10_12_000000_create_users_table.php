@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('password');
             $table->string('email');
-            $table->string('tanggal_lahir');
+            $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin', ['Laki-laki','Perempuan'])->default('Laki-laki');
             $table->string('alamat');
             $table->enum('kelas', ['A','B','C']);
