@@ -15,12 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('password');
-            $table->string('email');
-            $table->string('tanggal_lahir');
-            $table->enum('jenis_kelamin', ['Laki-laki','Perempuan'])->default('Laki-laki');
-            $table->string('alamat');
-            $table->enum('kelas', ['A','B','C']);
-            $table->integer('level');
+            $table->date('tanggal_lahir');
+            $table->enum('jenis_kelamin', ['L', 'P']);
+            $table->enum('kelas', ['A', 'B', 'C']); // Guru pegang 1 kelas
+            $table->integer('level'); // 1: admin, 2: guru
             $table->timestamps();
         });
     }

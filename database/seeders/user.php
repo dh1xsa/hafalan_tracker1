@@ -2,50 +2,45 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class user extends Seeder
+class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('users')->insert([
-            [
-                'name' => 'admin',
-                'password' => Hash::make('123456'),
-                'level' => '1'
-            ],
-            [
-                'name' => 'Guru1',
-                'password' => Hash::make('123456'),
-                'level' => '2'
-            ],
-            [
-                'name' => 'Guru2',
-                'password' => Hash::make('123456'),
-                'level' => '2'
-            ],
-             [
-                'name' => 'Guru3',
-                'password' => Hash::make('123456'),
-                'level' => '2'
-            ],
-             [
-                'name' => 'Guru4',
-                'password' => Hash::make('123456'),
-                'level' => '2'
-            ],
-             [
-                'name' => 'Guru5',
-                'password' => Hash::make('123456'),
-                'level' => '2'
-            ],
-
+        // Admin
+        User::create([
+            'name' => 'Admin 1',
+            'password' => Hash::make('123456'),
+            'tanggal_lahir' => '1990-01-01',
+            'jenis_kelamin' => 'L',
+            'kelas' => 'A', // Boleh diisi atau dikosongkan
+            'level' => 1,
         ]);
+
+        User::create([
+            'name' => 'Admin 2',
+            'password' => Hash::make('123456'),
+            'tanggal_lahir' => '1992-01-01',
+            'jenis_kelamin' => 'P',
+            'kelas' => 'B',
+            'level' => 1,
+        ]);
+
+        // Guru
+        $kelasList = ['A', 'B', 'C'];
+
+        foreach ($kelasList as $index => $kelas) {
+            User::create([
+                'name' => 'Guru ' . ($index + 1),
+                'password' => Hash::make('password'),
+                'tanggal_lahir' => '1985-0' . ($index + 1) . '-15',
+                'jenis_kelamin' => $index % 2 == 0 ? 'L' : 'P',
+                'kelas' => $kelas,
+                'level' => 2,
+            ]);
+        }
     }
 }
