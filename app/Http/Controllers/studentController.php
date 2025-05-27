@@ -26,4 +26,28 @@ class studentController extends Controller
 
         return response()->json($students);
     }
+
+    public function edit($id){
+        $student = Student::find($id);
+
+        if(!$student){
+            return redirect()->route('student-dashboard')->with('error', 'Account not found');
+        }
+        return view('', compact('student'));
+    }
+
+    public function update(Request $request, $id){
+        $student = Student::where('id',$id)->first();
+
+        if(!$student){
+            return redirect()->route('student-dashboard')->with('error', 'Account not found');
+        }
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:L,P',
+        ]);
+        $student->update($request->all());
+        return redirect()->route('student-dashboard')->with('success', 'Profile berhasil di update');
+    }
 }
