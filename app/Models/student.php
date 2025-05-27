@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Student extends Model
 {
     protected $fillable = [
-        'user_id',
         'guru_id',
         'name',
         'password',
