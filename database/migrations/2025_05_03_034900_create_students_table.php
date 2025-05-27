@@ -13,12 +13,19 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->unsignedBigInteger('user_id'); // Jika siswa punya akun login
+            $table->unsignedBigInteger('guru_id'); // Foreign key ke users table (hanya untuk guru)
             $table->string('name');
             $table->string('password');
+            $table->date('tanggal_lahir');
+            $table->enum('jenis_kelamin', ['L', 'P']);
             $table->timestamps();
+
+            // Foreign key ke tabel users (guru)
+            $table->foreign('guru_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
+
 
     /**
      * Reverse the migrations.

@@ -2,33 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
-    use HasFactory;
-
-    protected $table = 'students';
-
-
-    public $timestamps = true;
-
     protected $fillable = [
         'user_id',
+        'guru_id',
         'name',
         'password',
+        'tanggal_lahir',
+        'jenis_kelamin',
     ];
-    public function user()
-    {
-        return $this->belongsTo(user::class, 'user_id');
-    }
 
-    public function setPasswordAttribute($value)
+    // Relasi ke guru (user)
+    public function guru(): BelongsTo
     {
-            $this->attributes['password'] = Hash::make($value);
+        return $this->belongsTo(User::class, 'guru_id')->where('level', 2);
     }
-    
-
 }
