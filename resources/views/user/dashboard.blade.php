@@ -4,6 +4,16 @@
 
 @section('content')
 
+<div class="max-w-7xl mx-auto w-full p-4 lg:p-8">
+    <div
+      class="rounded-2xl shadow-2xl bg-cover bg-center bg-no-repeat flex items-center justify-center min-h-[400px] lg:min-h-[500px] text-white"
+      style="background-image: url('/assets/images/19.jpg');"
+    >
+      <h1 class="text-4xl lg:text-5xl font-bold drop-shadow-lg">Welcome</h1>
+    </div>
+  </div>
+  
+
 <form action="{{ route('user-store') }}" method="POST" class="max-w-7xl mx-auto bg-white p-6 rounded shadow">
     @csrf
 

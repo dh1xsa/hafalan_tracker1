@@ -11,7 +11,6 @@
     <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
         <h1 class="text-xl font-bold text-blue-600">Aplikasi Hafalan</h1>
         <div>
-            <a href="#" class="text-sm text-gray-600 hover:text-blue-600">Profil</a>
         </div>
     </nav>
 
@@ -19,9 +18,9 @@
         {{-- Sidebar --}}
         <aside class="w-64 bg-white shadow-md p-4">
             <ul class="space-y-2">
-                <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Dashboard</a></li>
-                <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Murid</a></li>
-                <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Hafalan</a></li>
+                <li><a href="/student-dashboard" class="block py-2 px-3 rounded hover:bg-blue-100">Dashboard</a></li>
+                {{-- <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Murid</a></li>
+                <li><a href="#" class="block py-2 px-3 rounded hover:bg-blue-100">Hafalan</a></li> --}}
                 <li>
                     <form action="{{ route('student-logout') }}" method="POST">
                         @csrf

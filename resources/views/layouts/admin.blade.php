@@ -12,7 +12,7 @@
         <h1 class="text-xl font-bold text-blue-600">Aplikasi Hafalan</h1>
         <div class="relative inline-block text-left">
             <button onclick="toggleDropdown()" class="text-sm text-gray-600 hover:text-blue-600 focus:outline-none">
-                Welcome 
+                More
             </button>
         
             <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10">
