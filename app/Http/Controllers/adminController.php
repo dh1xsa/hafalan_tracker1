@@ -19,8 +19,9 @@ class adminController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required',
-            'password' => 'required',
+            'name' => 'required|max:100',
+            'password' => 'required|min:6',
+            'kelas' => 'required|in:A,B,C',
         ]);
 
         $validated['level'] = 2;
