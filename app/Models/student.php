@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Student extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'user_id',
         'guru_id',
         'name',
         'password',
@@ -16,9 +17,17 @@ class Student extends Model
         'jenis_kelamin',
     ];
 
-    // Relasi ke guru (user)
-    public function guru(): BelongsTo
+    protected $hidden = [
+        'password',
+    ];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+    ];
+
+    // Relasi: Murid dimiliki oleh satu guru
+    public function guru()
     {
-        return $this->belongsTo(User::class, 'guru_id')->where('level', 2);
+        return $this->belongsTo(User::class, 'guru_id');
     }
 }
