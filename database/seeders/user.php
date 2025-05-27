@@ -30,6 +30,21 @@ class user extends Seeder
                 'password' => Hash::make('123456'),
                 'level' => '2'
             ],
+             [
+                'name' => 'Guru3',
+                'password' => Hash::make('123456'),
+                'level' => '2'
+            ],
+             [
+                'name' => 'Guru4',
+                'password' => Hash::make('123456'),
+                'level' => '2'
+            ],
+             [
+                'name' => 'Guru5',
+                'password' => Hash::make('123456'),
+                'level' => '2'
+            ],
 
         ]);
     }
