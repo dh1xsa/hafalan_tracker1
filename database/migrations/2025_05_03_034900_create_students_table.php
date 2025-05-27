@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Jika siswa punya akun login
             $table->unsignedBigInteger('guru_id'); // Foreign key ke users table (hanya untuk guru)
             $table->string('name');
             $table->string('password');

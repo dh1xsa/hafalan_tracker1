@@ -14,33 +14,48 @@ class student extends Seeder
      */
     public function run(): void
     {
-        DB::table('students')->insert([
-            ['user_id' => '2', 'name' => 'Adit', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Budi', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Citra', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Dewi', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Eko', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Fani', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Gilang', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Hana', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Irfan', 'password' => Hash::make('123456')],
-            ['user_id' => '2', 'name' => 'Joko', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Kiki', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Lia', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Maya', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Niko', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Oki', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Putri', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Qori', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Rina', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Sigit', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Tari', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Ujang', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Vina', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Wawan', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Xena', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Yuni', 'password' => Hash::make('123456')],
-            ['user_id' => '3', 'name' => 'Zaki', 'password' => Hash::make('123456')],
-        ]);
+        $students = [
+            ['guru_id' => 2, 'name' => 'Adit', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 2, 'name' => 'Budi', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 2, 'name' => 'Citra', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 2, 'name' => 'Dewi', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 2, 'name' => 'Eko', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 2, 'name' => 'Fani', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 2, 'name' => 'Gilang', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 2, 'name' => 'Hana', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 2, 'name' => 'Irfan', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 2, 'name' => 'Joko', 'jenis_kelamin' => 'L'],
+
+            ['guru_id' => 3, 'name' => 'Kiki', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 3, 'name' => 'Lia', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 3, 'name' => 'Maya', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 3, 'name' => 'Niko', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 3, 'name' => 'Oki', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 3, 'name' => 'Putri', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 3, 'name' => 'Qori', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 3, 'name' => 'Rina', 'jenis_kelamin' => 'P'],
+
+            ['guru_id' => 4, 'name' => 'Sigit', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 4, 'name' => 'Tari', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 4, 'name' => 'Ujang', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 4, 'name' => 'Vina', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 4, 'name' => 'Wawan', 'jenis_kelamin' => 'L'],
+            ['guru_id' => 4, 'name' => 'Xena', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 4, 'name' => 'Yuni', 'jenis_kelamin' => 'P'],
+            ['guru_id' => 4, 'name' => 'Zaki', 'jenis_kelamin' => 'L'],
+        ];
+
+        foreach ($students as $student) {
+            DB::table('students')->insert([
+                'user_id' => null, // Atur jika siswa punya akun, kalau tidak bisa null
+                'guru_id' => $student['guru_id'],
+                'name' => $student['name'],
+                'password' => Hash::make('123456'),
+                'tanggal_lahir' => now()->subYears(rand(6, 10))->subDays(rand(0, 365)), // umur kira-kira 6–10 tahun
+                'jenis_kelamin' => $student['jenis_kelamin'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }
