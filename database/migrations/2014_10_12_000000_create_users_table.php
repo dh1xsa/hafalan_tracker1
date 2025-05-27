@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->enum('level', ['1', '2']); // 1: admin, 2: guru
             $table->string('name');
             $table->string('password');
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->enum('kelas', ['A', 'B', 'C']); // Guru pegang 1 kelas
-            $table->integer('level'); // 1: admin, 2: guru
+
             $table->timestamps();
         });
     }
