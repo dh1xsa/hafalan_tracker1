@@ -10,11 +10,15 @@ class adminController extends Controller
 {
     public function dashboard()
     {
-        $user = user::where('level', 2)->get();
-        $student = student::with('user')->get();
+        // Ambil semua guru (user dengan level 2), indeks berdasarkan group_id
+        $user = User::where('level', 2)->get()->keyBy('group_id');
+
+        // Ambil semua murid, kelompokkan berdasarkan group_id
+        $student = Student::orderBy('group_id')->orderBy('name')->get()->groupBy('group_id');
 
         return view('admin.dashboard-user', compact('user', 'student'));
     }
+
 
     public function store(Request $request)
     {
@@ -56,16 +60,17 @@ class adminController extends Controller
 
     public function student_dashboard()
     {
-        $user = user::where('level', 2)->get();
-        $students = student::with('user')
-            ->orderBy('user_id')  // pastikan urut dulu
-            ->orderBy('name')     // opsional: urutkan nama murid dalam kelompok
+        // Ambil semua guru (user level 2), lalu indeks berdasarkan group_id
+        $guru = user::where('level', 2)->get()->keyBy('group_id');
+
+        // Ambil semua siswa, lalu kelompokkan berdasarkan group_id
+        $students = student::orderBy('group_id')
+            ->orderBy('name')
             ->get()
-            ->groupBy('user_id'); // hasilnya adalah Collection yang terkelompok
+            ->groupBy('group_id');
 
-        return view('admin.dashboard-student', compact('students', 'user'));
+        return view('admin.dashboard-student', compact('students', 'guru'));
     }
-
 
     public function student_store(Request $request)
     {
@@ -86,30 +91,28 @@ class adminController extends Controller
 
     public function student_edit($id)
     {
-        $student = student::findOrFail($id);
-        $user = user::all();
+        $student = Student::findOrFail($id);
+        $user = User::where('level', 2)->get();
         return view('admin.edit-student', compact('student', 'user'));
     }
 
-    // Proses update data
     public function student_update(Request $request, $id)
-{
-    $request->validate([
-        'user_id' => 'required',
-        'name'    => 'required',
-        'birth_date' => 'required|date',
-        'gender' => 'required|in:L,P',
-    ]);
+    {
+        $request->validate([
+            'user_id'    => 'required|exists:users,id',
+            'name'       => 'required|string|max:255',
+            'birth_date' => 'required|date',
+            'gender'     => 'required|in:L,P',
+        ]);
 
-    $student = student::findOrFail($id);
-    $student->update([
-        'user_id' => $request->user_id,
-        'name'    => $request->name,
-        'birth_date'    => $request->birth_date,
-        'gender'    => $request->gender,
-    ]);
+        $student = Student::findOrFail($id);
+        $student->update([
+            'user_id'    => $request->user_id,
+            'name'       => $request->name,
+            'birth_date' => $request->birth_date,
+            'gender'     => $request->gender,
+        ]);
 
-    return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
-}
-
+        return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
+    }
 }

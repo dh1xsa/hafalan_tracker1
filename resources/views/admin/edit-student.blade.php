@@ -10,9 +10,9 @@
 
             <div>
                 <label class="block font-medium mb-1">Guru Penanggung Jawab</label>
-                <select name="user_id" class="w-full border rounded px-3 py-2">
+                <select name="group_id" class="w-full border rounded px-3 py-2">
                     @foreach ($user as $data)
-                        <option value="{{ $data->id }}" {{ $student->user_id == $data->id ? 'selected' : '' }}>
+                        <option value="{{ $data->group_id }}" {{ $student->group_id == $data->group_id ? 'selected' : '' }}>
                             {{ $data->name }}
                         </option>
                     @endforeach
@@ -30,7 +30,7 @@
         </form>
 
         <!-- Notifikasi -->
-        @if(session('success'))
+        @if (session('success'))
             <p class="mt-4 text-green-600">{{ session('success') }}</p>
         @elseif(session('error'))
             <p class="mt-4 text-red-600">{{ session('error') }}</p>

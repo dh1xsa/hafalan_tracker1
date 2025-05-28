@@ -9,20 +9,21 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentSeeder extends Seeder
 {
-   public function run(): void
+    public function run(): void
     {
         $names = ['Adit', 'Angga', 'Rina', 'Salsa', 'Budi'];
 
-        $gurus = User::where('level', 2)->get(); // Ambil semua guru
+        // Ambil semua guru (level 2) yang punya group_id
+        $gurus = User::where('level', 2)->whereNotNull('group_id')->get();
 
         foreach ($gurus as $guru) {
             foreach ($names as $name) {
                 Student::create([
-                    'guru_id' => $guru->id,
+                    'group_id' => $guru->group_id, // foreign key ke tabel groups
                     'name' => $name,
                     'password' => Hash::make('123456'),
-                    'tanggal_lahir' => '2010-01-01',
-                    'jenis_kelamin' => in_array($name, ['Rina', 'Salsa']) ? 'P' : 'L',
+                    'birth_date' => '2010-01-01',
+                    'gender' => in_array($name, ['Rina', 'Salsa']) ? 'P' : 'L',
                 ]);
             }
         }
