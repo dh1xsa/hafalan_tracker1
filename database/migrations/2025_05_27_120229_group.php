@@ -11,20 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('group', function (Blueprint $table) {
+        Schema::create('hafalans', function (Blueprint $table) {
             $table->id();
-            $table->string('group_name');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('group_id');
+            $table->foreignId('user_id');
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->text('hafalan');
+            $table->text('description');
+            $table->date('date');
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('group');
+        Schema::dropIfExists('hafalans');
     }
 };
