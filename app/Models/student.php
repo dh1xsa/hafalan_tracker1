@@ -5,29 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Student extends Model
+class student extends Model
 {
     use HasFactory;
+    protected $table = 'students';
+    public $timestamps = true;
 
     protected $fillable = [
-        'guru_id',
+        'group_id',
         'name',
         'password',
-        'tanggal_lahir',
-        'jenis_kelamin',
+        'birth_date',
+        'gender',
     ];
 
-    protected $hidden = [
-        'password',
-    ];
-
-    protected $casts = [
-        'tanggal_lahir' => 'date',
-    ];
-
-    // Relasi: Murid dimiliki oleh satu guru
-    public function guru()
+    public function group()
     {
-        return $this->belongsTo(User::class, 'guru_id');
+        return $this->belongsTo(group::class, 'group_id');
     }
 }

@@ -11,12 +11,11 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
-        'password',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'kelas',
         'level',
+        'name',
+        'birth_date',
+        'gender',
+        'group_id'
     ];
 
     protected $hidden = [
@@ -24,24 +23,11 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'tanggal_lahir' => 'date',
+        'password' => 'hashed',
     ];
 
-    // Relasi: Guru punya banyak murid
-    public function students()
+    public function group()
     {
-        return $this->hasMany(Student::class, 'guru_id');
-    }
-
-    // Scope untuk mengambil hanya guru
-    public function scopeGuru($query)
-    {
-        return $query->where('level', 2);
-    }
-
-    // Scope untuk admin
-    public function scopeAdmin($query)
-    {
-        return $query->where('level', 1);
+        return $this->belongsTo(group::class, 'group_id');
     }
 }
