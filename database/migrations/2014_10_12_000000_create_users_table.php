@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->enum('level', ['1', '2']); 
+            $table->enum('level', ['1', '2']);
             $table->string('name');
             $table->string('password');
             $table->date('birth_date');
             $table->enum('gender', ['L', 'P']);
-            $table->string('group_id')->nullable();
-
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->timestamps();
+            $table->foreign('group_id')->references('id')->on('groups')->nullOnDelete(); 
         });
     }
 

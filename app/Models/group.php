@@ -5,27 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class group extends Model
+class Group extends Model
 {
     use HasFactory;
 
-    protected $table = 'group';
-
-
-    public $timestamps = true;
+    protected $table = 'groups';
 
     protected $fillable = [
-        'group_name',
-        'user_id'
+        'groups_name',
+        'user_id',
     ];
 
     public function user()
     {
-        return $this->belongsTo(user::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function students()
     {
-        return $this->hasMany(Student::class, 'group_id', 'id');
+        return $this->hasMany(Student::class); // default foreign key: group_id
     }
 }

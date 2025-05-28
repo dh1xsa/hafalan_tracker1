@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class student extends Model
+class Student extends Model
 {
     use HasFactory;
+
     protected $table = 'students';
-    public $timestamps = true;
 
     protected $fillable = [
         'group_id',
@@ -21,6 +21,11 @@ class student extends Model
 
     public function group()
     {
-        return $this->belongsTo(group::class, 'group_id');
+        return $this->belongsTo(Group::class);
+    }
+
+    public function hafalans()
+    {
+        return $this->hasMany(Hafalan::class);
     }
 }

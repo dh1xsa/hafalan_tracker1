@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class hafalan extends Model
+class Hafalan extends Model
 {
     use HasFactory;
 
     protected $table = 'hafalans';
-
-
-    public $timestamps = true;
 
     protected $fillable = [
         'group_id',
@@ -25,15 +22,16 @@ class hafalan extends Model
 
     public function group()
     {
-        return $this->belongsTo(group::class, 'group_id');
+        return $this->belongsTo(Group::class);
     }
+
     public function user()
     {
-        return $this->belongsTo(user::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function student()
     {
-        return $this->belongsTo(student::class, 'student_id');
+        return $this->belongsTo(Student::class);
     }
 }
