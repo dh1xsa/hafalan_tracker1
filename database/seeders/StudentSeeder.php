@@ -9,18 +9,20 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentSeeder extends Seeder
 {
-    public function run(): void
+   public function run(): void
     {
+        $names = ['Adit', 'Angga', 'Rina', 'Salsa', 'Budi'];
+
         $gurus = User::where('level', 2)->get(); // Ambil semua guru
 
         foreach ($gurus as $guru) {
-            for ($i = 1; $i <= 5; $i++) {
+            foreach ($names as $name) {
                 Student::create([
                     'guru_id' => $guru->id,
-                    'name' => "Murid {$guru->kelas}-$i",
-                    'password' => Hash::make('password'),
-                    'tanggal_lahir' => '2010-01-0' . $i,
-                    'jenis_kelamin' => $i % 2 == 0 ? 'L' : 'P',
+                    'name' => $name,
+                    'password' => Hash::make('123456'),
+                    'tanggal_lahir' => '2010-01-01',
+                    'jenis_kelamin' => in_array($name, ['Rina', 'Salsa']) ? 'P' : 'L',
                 ]);
             }
         }
