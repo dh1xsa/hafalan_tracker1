@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->foreign('group_id')->references('id')->on('group');
+            $table->unsignedBigInteger('group_id');
             $table->string('name');
             $table->string('password');
             $table->date('birth_date');
             $table->enum('gender', ['L', 'P']);
             $table->timestamps();
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade'); // perbaiki nama tabel
         });
     }
 

@@ -15,7 +15,8 @@ class User extends Authenticatable
         'name',
         'birth_date',
         'gender',
-        'group_id'
+        'group_id',
+        'password',
     ];
 
     protected $hidden = [
@@ -28,6 +29,6 @@ class User extends Authenticatable
 
     public function group()
     {
-        return $this->belongsTo(group::class, 'group_id');
+        return $this->belongsTo(Group::class);
     }
 }
