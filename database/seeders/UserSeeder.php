@@ -1,11 +1,13 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Support\Facades\Hash;
 
-class userSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     public function run(): void
     {
@@ -13,23 +15,33 @@ class userSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'password' => Hash::make('123456'),
-            'tanggal_lahir' => '1990-01-01',
-            'jenis_kelamin' => 'L',
-            'kelas' => 'A', // Boleh diisi atau dikosongkan
+            'birth_date' => '1990-01-01',
+            'gender' => 'L',
+            'group_id' => null, // Admin tidak memiliki group
             'level' => 1,
         ]);
 
-        // Guru
-        $kelasList = ['A', 'B', 'C'];
+        // Guru + buat grup untuk setiap guru
+        $groupNames = ['A', 'B', 'C'];
 
-        foreach ($kelasList as $index => $kelas) {
-            User::create([
+        foreach ($groupNames as $index => $groupName) {
+            $guru = User::create([
                 'name' => 'Guru ' . ($index + 1),
                 'password' => Hash::make('123456'),
-                'tanggal_lahir' => '1985-0' . ($index + 1) . '-15',
-                'jenis_kelamin' => $index % 2 == 0 ? 'L' : 'P',
-                'kelas' => $kelas,
+                'birth_date' => '1985-0' . ($index + 1) . '-15',
+                'gender' => $index % 2 === 0 ? 'L' : 'P',
                 'level' => 2,
+            ]);
+
+            // Buat grup untuk guru ini
+            $group = Group::create([
+                'groups_name' => $groupName,
+                'user_id' => $guru->id,
+            ]);
+
+            // Update user dengan group_id
+            $guru->update([
+                'group_id' => $group->id,
             ]);
         }
     }
