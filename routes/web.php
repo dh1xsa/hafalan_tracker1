@@ -44,6 +44,7 @@ Route::get('/search-students', [StudentController::class, 'search'])->name('stud
 Route::middleware(['auth.student'])->group(function () {
     Route::post('/student-logout', [studentLoginController::class, 'logout'])->name('student-logout');
     Route::get('/student-dashboard', [studentController::class, 'dashboard'])->name('student-dashboard');
+    Route::resource('student', studentController::class);
 });
 
 Route::middleware(['auth.admin'])->group(function () {

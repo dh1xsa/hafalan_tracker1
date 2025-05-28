@@ -73,6 +73,8 @@ class adminController extends Controller
             'user_id' => 'required',
             'name' => 'required',
             'password' => 'required',
+            'birth_date' => 'required|date',
+            'gender' => 'required|in:L,P',
         ]);
 
         if (student::create($validated)) {
@@ -95,12 +97,16 @@ class adminController extends Controller
     $request->validate([
         'user_id' => 'required',
         'name'    => 'required',
+        'birth_date' => 'required|date',
+        'gender' => 'required|in:L,P',
     ]);
 
     $student = student::findOrFail($id);
     $student->update([
         'user_id' => $request->user_id,
         'name'    => $request->name,
+        'birth_date'    => $request->birth_date,
+        'gender'    => $request->gender,
     ]);
 
     return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
