@@ -6,8 +6,30 @@
     <h2 class="text-2xl font-semibold mb-4">Hafalanmu</h2>
 
     @foreach ($student as $data)
-        <p class="text-lg font-medium text-blue-700">{{ $data->name }}</p>
-    @endforeach
+    <p class="text-lg font-medium text-blue-700 cursor-pointer" data-bs-toggle="modal" data-bs-target="#modalSiswa{{ $data->id }}">
+        {{ $data->name }}
+    </p>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalSiswa{{ $data->id }}" tabindex="-1" aria-labelledby="modalSiswaLabel{{ $data->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalSiswaLabel{{ $data->id }}">Detail Murid: {{ $data->name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nama:</strong> {{ $data->name }}</p>
+                    <p><strong>Group ID:</strong> {{ $data->group_id }}</p>
+                    <p><strong>Tanggal Lahir:</strong> {{ $data->birth_date }}</p>
+                    <p><strong>Jenis Kelamin:</strong> {{ $data->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+                    <p><strong>Password:</strong> ******</p> {{-- Demi keamanan, jangan tampilkan password asli --}}
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
+
 
     {{-- Hafalan --}}
     <h3 class="text-xl font-semibold mt-6 mb-2">Detail Hafalan</h3>
