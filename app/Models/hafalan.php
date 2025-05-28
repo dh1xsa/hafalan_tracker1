@@ -15,6 +15,7 @@ class hafalan extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        'group_id',
         'user_id',
         'student_id',
         'hafalan',
@@ -22,6 +23,10 @@ class hafalan extends Model
         'date',
     ];
 
+    public function group()
+    {
+        return $this->belongsTo(group::class, 'group_id');
+    }
     public function user()
     {
         return $this->belongsTo(user::class, 'user_id');
