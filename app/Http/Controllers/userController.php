@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\hafalan;
+use App\Models\Group;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class userController extends Controller
@@ -14,6 +15,7 @@ class userController extends Controller
 
         $student = student::where('user_id', session('user_id'))->with('user')->get();
         $hafalan = hafalan::where('user_id', session('user_id'))->with('user', 'student')->get();
+        $groups = Group::all();
 
         return view('user.dashboard', compact('student', 'hafalan'));
     }
@@ -97,7 +99,7 @@ class userController extends Controller
         $pdf = Pdf::loadView('user.pdf-hafalan', compact('hafalan', 'student'));
         return $pdf->download('Hafalan_' . $student->name . '.pdf');
     }
-
+    
     public function search(Request $request)
     {
         $keyword = $request->query('q');

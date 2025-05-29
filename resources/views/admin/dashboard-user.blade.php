@@ -52,7 +52,12 @@
 
             <div>
                 <label class="block mb-1 font-medium">Kelas</label>
-                <input type="number" name="group_id" class="w-full border rounded px-3 py-2" required>
+                <select name="group_id" class="w-full border rounded px-3 py-2" required>
+                    <option value="" disabled selected>Pilih Kelas</option>
+                    @foreach ($groups as $group)
+                        <option value="{{ $group->id }}">{{ $group->groups_name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
@@ -69,27 +74,26 @@
                 <thead class="bg-gray-200">
                     <tr>
                         <th class="px-4 py-2 text-left">Nama Guru</th>
+                        <th class="px-4 py-2 text-left">Kelas</th>
                         <th class="px-4 py-2 text-left">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($user as $data)
+                    @forelse ($user as $guru)
                         <tr class="border-t">
-                            <td class="px-4 py-2">{{ $data->name }}</td>
+                            <td class="px-4 py-2">{{ $guru->name }}</td>
+                            <td class="px-4 py-2">{{ $guru->group ? $guru->group->groups_name : '-' }}</td>
                             <td class="px-4 py-2 flex space-x-2">
-                                <button onclick="showDetail({{ json_encode($data) }})"
-                                    class="text-green-600 hover:underline">
-                                    Lihat Detail
-                                </button>
+                                <button onclick="showDetail({{ json_encode($guru) }})"
+                                    class="text-green-600 hover:underline">Lihat Detail</button>
                                 <span>|</span>
-                                <a href="{{ route('admin-user-edit', $data->id) }}" class="text-blue-600 hover:underline">
-                                    Ubah Nama
-                                </a>
+                                <a href="{{ route('admin-user-edit', $guru->id) }}"
+                                    class="text-blue-600 hover:underline">Ubah Nama</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="2" class="text-center py-4">Belum ada data guru</td>
+                            <td colspan="3" class="text-center py-4">Belum ada data guru</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -188,30 +192,30 @@
     </script>
 
 
-<script>
-    let passwordVisible = false;
-    const realPassword = "${data.password || ''}"; // Simpan password asli
+    <script>
+        let passwordVisible = false;
+        const realPassword = "${data.password || ''}"; // Simpan password asli
 
-    function togglePassword() {
-        const passwordField = document.getElementById('passwordField');
-        const eyeIcon = document.getElementById('eyeIcon');
+        function togglePassword() {
+            const passwordField = document.getElementById('passwordField');
+            const eyeIcon = document.getElementById('eyeIcon');
 
-        passwordVisible = !passwordVisible;
+            passwordVisible = !passwordVisible;
 
-        if (passwordVisible) {
-            passwordField.textContent = realPassword;
-            eyeIcon.innerHTML = `
+            if (passwordVisible) {
+                passwordField.textContent = realPassword;
+                eyeIcon.innerHTML = `
                 <path d="M13.875 18.825A10.05 10.05 0 0110 20c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0110 3c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L14 14" />
             `;
-        } else {
-            passwordField.textContent = '••••••••';
-            eyeIcon.innerHTML = `
+            } else {
+                passwordField.textContent = '••••••••';
+                eyeIcon.innerHTML = `
                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
             `;
+            }
         }
-    }
-</script>
+    </script>
 
     <script>
         document.getElementById('toggleFormBtn').addEventListener('click', function() {
