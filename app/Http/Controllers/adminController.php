@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\user;
+use App\Models\group;
 
 class adminController extends Controller
 {
@@ -115,4 +116,33 @@ class adminController extends Controller
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
     }
+
+    public function group_dashboard(){
+        $groups = Group::all();
+        return view('admin.dashboard-group', compact('groups'));
+    }
+
+    public function group_store(Request $request){
+        $validated = $request->validate([
+            'groups_name' => 'required|max:20',
+        ]);
+
+        if (Group::create($validated)) {
+            return redirect()->route('admin-group-dashboard')->with('success', 'Data berhasil diperbarui');
+        }
+
+        return back()->with('error', 'Gagal memperbarui data');
+    }
+
+    public function group_destroy($id){
+        $groups = Group::find($id);
+
+        if(!$groups){
+            return redirect()->route('admin-group-dashboard')->with('error', 'User not found');
+        }
+
+        $groups->delete();
+        return redirect()->route('admin-group-dashboard')->with('success', 'Data deleted successfully');
+    }
+
 }
