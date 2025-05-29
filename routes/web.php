@@ -59,4 +59,8 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::post('/admin-student-dashboard', [adminController::class, 'student_store'])->name('admin-student-store');
     Route::get('/edit-student/{id}', [adminController::class, 'student_edit'])->name('admin-student-edit');
     Route::put('/edit-student/{id}', [adminController::class, 'student_update'])->name('admin-student-update');
+
+    Route::get('/admin-group-dashboard', [adminController::class, 'group_dashboard'])->name('admin-group-dashboard');
+    Route::post('/admin-group-dashboard', [adminController::class, 'group_store'])->name('admin-group-store');
+    Route::delete('/admin-group-dashboard/{id}', [adminController::class, 'group_destroy'])->name('admin-group-destroy');
 });

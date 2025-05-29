@@ -42,6 +42,10 @@
                     class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-user-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
                     Guru
                 </a>
+                <a href="{{ route('admin-group-dashboard') }}"
+                    class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-group-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
+                    Kelas
+                </a>
                 <form action="{{ route('user-logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded">
@@ -68,6 +72,10 @@
                 <a href="{{ route('admin-user-dashboard') }}"
                     class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-user-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
                     Guru
+                </a>
+                <a href="{{ route('admin-group-dashboard') }}"
+                    class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('admin-group-dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
+                    Group
                 </a>
             </nav>
             <form action="{{ route('user-logout') }}" method="POST" class="p-4">

@@ -36,7 +36,6 @@ class UserSeeder extends Seeder
             // Buat grup untuk guru ini
             $group = Group::create([
                 'groups_name' => $groupName,
-                'user_id' => $guru->id,
             ]);
 
             // Update user dengan group_id
