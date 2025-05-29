@@ -4,7 +4,7 @@
 
     <!-- Form Tambah Murid -->
     <div class="bg-white p-6 rounded shadow mb-8 max-w-xl">
-        <h2 class="text-lg font-semibold mb-4">Tambah Group/Kelas</h2>
+        <h2 class="text-lg font-semibold mb-4">Tambah Kelas</h2>
         <form action="{{ route('admin-group-store') }}" method="POST" class="space-y-4">
             @csrf
             <div>
