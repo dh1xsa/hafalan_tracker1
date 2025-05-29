@@ -75,19 +75,32 @@ class adminController extends Controller
 
     public function student_store(Request $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required',
-            'name' => 'required',
-            'password' => 'required',
+        $request->validate([
+            'user_id'    => 'required|exists:users,id',
+            'name'       => 'required|string|max:255',
+            'password'   => 'required|string|min:6',
             'birth_date' => 'required|date',
-            'gender' => 'required|in:L,P',
+            'gender'     => 'required|in:L,P',
         ]);
 
-        if (student::create($validated)) {
-            return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
+        // Ambil data guru
+        $guru = User::findOrFail($request->user_id);
+
+        // Pastikan guru punya group_id
+        if (!$guru->group_id) {
+            return back()->with('error', 'Guru belum memiliki grup.');
         }
 
-        return back()->with('error', 'Gagal memperbarui data');
+        // Simpan murid dengan group_id dari guru
+        Student::create([
+            'group_id'   => $guru->group_id,
+            'name'       => $request->name,
+            'password'   => bcrypt($request->password),
+            'birth_date' => $request->birth_date,
+            'gender'     => $request->gender,
+        ]);
+
+        return redirect()->route('admin-student-dashboard')->with('success', 'Murid berhasil ditambahkan.');
     }
 
     public function student_edit($id)
@@ -117,12 +130,14 @@ class adminController extends Controller
         return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
     }
 
-    public function group_dashboard(){
+    public function group_dashboard()
+    {
         $groups = Group::all();
         return view('admin.dashboard-group', compact('groups'));
     }
 
-    public function group_store(Request $request){
+    public function group_store(Request $request)
+    {
         $validated = $request->validate([
             'groups_name' => 'required|max:20',
         ]);
@@ -134,15 +149,15 @@ class adminController extends Controller
         return back()->with('error', 'Gagal memperbarui data');
     }
 
-    public function group_destroy($id){
+    public function group_destroy($id)
+    {
         $groups = Group::find($id);
 
-        if(!$groups){
+        if (!$groups) {
             return redirect()->route('admin-group-dashboard')->with('error', 'User not found');
         }
 
         $groups->delete();
         return redirect()->route('admin-group-dashboard')->with('success', 'Data deleted successfully');
     }
-
 }
