@@ -32,12 +32,8 @@ Route::middleware(['auth.user'])->group(function () {
     Route::put('/edit-hafalan/{id}', [UserController::class, 'update'])->name('hafalan-update');
     //menghapus data hafalan siswa
     Route::delete('/student-detail/{id}', [userController::class, 'destroy'])->name('hafalan-destroy');
-
     Route::get('/user/student/{id}/export-pdf', [userController::class, 'exportPDF'])->name('student-detail.pdf');
-
-   
-Route::get('/search-students', [StudentController::class, 'search'])->name('students.search');
-
+    Route::get('/search-students', [StudentController::class, 'search'])->name('students.search');
 });
 
 // Midlleware agar Route hanya bisa diakses oleh murid yang sudah login
@@ -48,7 +44,7 @@ Route::middleware(['auth.student'])->group(function () {
 });
 
 Route::middleware(['auth.admin'])->group(function () {
-    Route::view('/admin-dashboard','admin.dashboard')->name('admin-dashboard');
+    Route::view('/admin-dashboard', 'admin.dashboard')->name('admin-dashboard');
     //
     Route::get('/admin-user-dashboard', [adminController::class, 'dashboard'])->name('admin-user-dashboard');
     Route::post('/admin-user-dashboard', [adminController::class, 'store'])->name('admin-user-store');

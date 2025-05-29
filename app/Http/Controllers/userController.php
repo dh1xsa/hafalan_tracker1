@@ -60,7 +60,7 @@ class userController extends Controller
         ]);
 
         $student_id = $request->student_id;
-        
+
         $hafalan = Hafalan::findOrFail($id);
         $hafalan->update([
             'hafalan'     => $request->hafalan,
@@ -79,31 +79,30 @@ class userController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
-   
 
-public function exportPDF($student_id)
-{
-    $hafalan = hafalan::where('user_id', session('user_id'))
-        ->where('student_id', $student_id)
-        ->with(['student', 'user'])
-        ->get();
 
-    if ($hafalan->isEmpty()) {
-        return redirect()->back()->with('error', 'Data hafalan tidak ditemukan.');
+    public function exportPDF($student_id)
+    {
+        $hafalan = hafalan::where('user_id', session('user_id'))
+            ->where('student_id', $student_id)
+            ->with(['student', 'user'])
+            ->get();
+
+        if ($hafalan->isEmpty()) {
+            return redirect()->back()->with('error', 'Data hafalan tidak ditemukan.');
+        }
+
+        $student = $hafalan->first()->student;
+
+        $pdf = Pdf::loadView('user.pdf-hafalan', compact('hafalan', 'student'));
+        return $pdf->download('Hafalan_' . $student->name . '.pdf');
     }
 
-    $student = $hafalan->first()->student;
+    public function search(Request $request)
+    {
+        $keyword = $request->query('q');
+        $students = \App\Models\Student::where('name', 'LIKE', "%{$keyword}%")->get();
 
-    $pdf = Pdf::loadView('user.pdf-hafalan', compact('hafalan', 'student'));
-    return $pdf->download('Hafalan_' . $student->name . '.pdf');
-}
-
-public function search(Request $request)
-{
-    $keyword = $request->query('q');
-    $students = \App\Models\Student::where('name', 'LIKE', "%{$keyword}%")->get();
-
-    return response()->json($students);
-}
-
+        return response()->json($students);
+    }
 }
