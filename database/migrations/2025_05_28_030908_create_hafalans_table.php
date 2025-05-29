@@ -12,15 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hafalans', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->text('hafalan');
-            $table->text('description');
-            $table->date('date');
-            $table->timestamps();
-        });
+    $table->id();
+    $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
+    $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // guru
+    $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+    $table->text('hafalan');
+    $table->text('description');
+    $table->enum('status', ['belum', 'proses', 'selesai', 'perlu diulang'])->default('belum');
+    $table->unsignedTinyInteger('score')->nullable(); // misalnya 0 - 100
+
+    $table->date('date');
+    $table->timestamps();
+});
+
     }
 
     /**

@@ -21,26 +21,27 @@ class UserSeeder extends Seeder
             'level' => 1,
         ]);
 
-        // Guru + buat grup untuk setiap guru
+        // Buat grup terlebih dahulu
         $groupNames = ['A', 'B', 'C'];
+        $groups = [];
 
-        foreach ($groupNames as $index => $groupName) {
-            $guru = User::create([
-                'name' => 'Guru ' . ($index + 1),
-                'password' => Hash::make('123456'),
-                'birth_date' => '1985-0' . ($index + 1) . '-15',
-                'gender' => $index % 2 === 0 ? 'L' : 'P',
-                'level' => 2,
-            ]);
-
-            // Buat grup untuk guru ini
+        foreach ($groupNames as $groupName) {
             $group = Group::create([
                 'groups_name' => $groupName,
             ]);
 
-            // Update user dengan group_id
-            $guru->update([
+            $groups[] = $group;
+        }
+
+        // Buat guru dan masukkan ke grup yang sudah dibuat
+        foreach ($groups as $index => $group) {
+            User::create([
+                'name' => 'Guru ' . ($index + 1),
+                'password' => Hash::make('123456'),
+                'birth_date' => '1985-0' . ($index + 1) . '-15',
+                'gender' => $index % 2 === 0 ? 'L' : 'P',
                 'group_id' => $group->id,
+                'level' => 2,
             ]);
         }
     }

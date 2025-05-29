@@ -11,15 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('students', function (Blueprint $table) {
+        Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('group_id');
+
+            // Kolom relasi ke groups
+            $table->unsignedBigInteger('group_id')->nullable(); // Bisa null kalau belum ditentukan grupnya
             $table->string('name');
             $table->string('password');
             $table->date('birth_date');
-            $table->enum('gender', ['L', 'P']);
+            $table->enum('gender', ['L', 'P']); // L = Laki-laki, P = Perempuan
             $table->timestamps();
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade'); // perbaiki nama tabel
+            $table->foreign('group_id')
+                  ->references('id')
+                  ->on('groups')
+                  ->onDelete('set null'); // Kalau grup dihapus, student tetap ada tapi group_id jadi null
         });
     }
 
