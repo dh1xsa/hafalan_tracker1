@@ -44,8 +44,9 @@ class adminController extends Controller
 
     public function edit($id)
     {
-        $user = user::findOrFail($id);
-        return view('admin.edit-user', compact('user'));
+        $user = User::findOrFail($id);
+        $groups = Group::all(); // Tambahkan ini
+        return view('admin.edit-user', compact('user', 'groups'));
     }
 
     // Proses update data
