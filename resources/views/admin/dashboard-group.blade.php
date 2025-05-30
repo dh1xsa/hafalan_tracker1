@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <!-- Form Tambah Murid -->
+
     <div class="bg-white p-6 rounded shadow mb-8 max-w-xl">
         <h2 class="text-lg font-semibold mb-4">Tambah Kelas</h2>
         <form action="{{ route('admin-group-store') }}" method="POST" class="space-y-4">
@@ -19,12 +19,12 @@
     </div>
 
     <div class="bg-white p-6 rounded shadow">
-        <h2 class="text-lg font-semibold mb-4">Daftar Murid</h2>
+        <h2 class="text-lg font-semibold mb-4">Daftar Kelas</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full table-auto border border-gray-300">
                 <thead class="bg-gray-200">
                     <tr>
-                        <th class="px-4 py-2 text-left">Nama Murid</th>
+                        <th class="px-4 py-2 text-left">Kelas</th>
                         <th class="px-4 py-2 text-left">Aksi</th>
                     </tr>
                 </thead>

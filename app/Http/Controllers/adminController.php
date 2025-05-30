@@ -13,11 +13,11 @@ class adminController extends Controller
     {
         // Ambil semua guru (user dengan level 2), indeks berdasarkan group_id
         $user = User::where('level', 2)->get()->keyBy('group_id');
-
-        // Ambil semua murid, kelompokkan berdasarkan group_id
+        $user = User::where('level', 2)->with('group')->get();
         $student = Student::orderBy('group_id')->orderBy('name')->get()->groupBy('group_id');
+        $groups = Group::all();
 
-        return view('admin.dashboard-user', compact('user', 'student'));
+        return view('admin.dashboard-user', compact('user', 'student', 'groups'));
     }
 
 
@@ -26,8 +26,12 @@ class adminController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:100',
             'password' => 'required|min:6',
-            'kelas' => 'required|in:A,B,C',
+            'birth_date' => 'required|date',
+            'group_id' => 'required|exists:groups,id',
         ]);
+
+        $validated['level'] = 2;
+        $validated['password'] = bcrypt($validated['password']); // agar password terenkripsi
 
         $validated['level'] = 2;
 
@@ -40,8 +44,9 @@ class adminController extends Controller
 
     public function edit($id)
     {
-        $user = user::findOrFail($id);
-        return view('admin.edit-user', compact('user'));
+        $user = User::findOrFail($id);
+        $groups = Group::all(); // Tambahkan ini
+        return view('admin.edit-user', compact('user', 'groups'));
     }
 
     // Proses update data

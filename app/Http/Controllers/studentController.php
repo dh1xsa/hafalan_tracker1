@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\hafalan;
+use App\Models\Group;
 
 class studentController extends Controller
 {
-    public function dashboard(){
-        $student = student::where('id', session('student_id'))->get();
-        $hafalan = hafalan::where('student_id', session('student_id'))->get();
-
-        return view('student.dashboard',compact('student','hafalan'));
+    public function dashboard()
+    {
+        $student = Student::where('id', session('student_id'))->get();
+        $hafalan = Hafalan::where('student_id', session('student_id'))->get();
+        $groups = Group::all();  // <-- jangan lupa ini
+        return view('student.dashboard', compact('student', 'hafalan', 'groups'));
     }
+
     public function search(Request $request)
     {
         $keyword = $request->query('q', '');
@@ -22,24 +25,29 @@ class studentController extends Controller
         // Hanya cari murid milik guru yang sedang login
         $students = Student::where('user_id', $userId)
             ->where('name', 'LIKE', "%{$keyword}%")
-            ->get(['id','name']);
+            ->get(['id', 'name']);
 
         return response()->json($students);
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         $student = Student::find($id);
 
-        if(!$student){
+        if (!$student) {
             return redirect()->route('student-dashboard')->with('error', 'Account not found');
         }
-        return view('', compact('student'));
+
+        $groups = Group::all();  // <-- pastikan ini ada
+        return view('student.edit', compact('student', 'groups'));  // <-- kirim variabel groups ke view
     }
 
-    public function update(Request $request, $id){
-        $student = Student::where('id',$id)->first();
 
-        if(!$student){
+    public function update(Request $request, $id)
+    {
+        $student = Student::where('id', $id)->first();
+
+        if (!$student) {
             return redirect()->route('student-dashboard')->with('error', 'Account not found');
         }
         $request->validate([

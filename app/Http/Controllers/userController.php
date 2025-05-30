@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\hafalan;
+use App\Models\Group;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class userController extends Controller
 {
     public function dashboard()
-    {
+{
+    $student = Student::where('user_id', session('user_id'))->with('user')->get();
+    $hafalan = Hafalan::where('user_id', session('user_id'))->with('user', 'student')->get();
+    $groups = Group::all();
 
-        $student = student::where('user_id', session('user_id'))->with('user')->get();
-        $hafalan = hafalan::where('user_id', session('user_id'))->with('user', 'student')->get();
+    return view('user.dashboard', compact('student', 'hafalan'));
+}
 
-        return view('user.dashboard', compact('student', 'hafalan'));
-    }
 
     public function store(Request $request)
     {
