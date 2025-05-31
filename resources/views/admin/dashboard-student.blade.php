@@ -29,6 +29,15 @@
             </div>
 
             <div>
+                <label class="block mb-1 font-medium">Kelas</label>
+                <select name="group_id" class="w-full border rounded px-3 py-2">
+                    @foreach ($groups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
                 <label class="block mb-1 font-medium">Nama Murid</label>
                 <input type="text" name="name" class="w-full border rounded px-3 py-2" required>
             </div>

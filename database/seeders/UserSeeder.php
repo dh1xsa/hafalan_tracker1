@@ -11,38 +11,30 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
+        // 1. Buat admin
         User::create([
             'name' => 'Admin',
             'password' => Hash::make('123456'),
             'birth_date' => '1990-01-01',
             'gender' => 'L',
-            'group_id' => null, // Admin tidak memiliki group
             'level' => 1,
         ]);
 
-        // Buat grup terlebih dahulu
-        $groupNames = ['A', 'B', 'C'];
-        $groups = [];
+        // 2. Ambil semua group
+        $groups = Group::all();
 
-        foreach ($groupNames as $groupName) {
-            $group = Group::create([
-                'groups_name' => $groupName,
-            ]);
-
-            $groups[] = $group;
-        }
-
-        // Buat guru dan masukkan ke grup yang sudah dibuat
-        foreach ($groups as $index => $group) {
-            User::create([
-                'name' => 'Guru ' . ($index + 1),
+        // 3. Buat beberapa guru dan attach ke group secara acak
+        foreach (range(1, 5) as $index) {
+            $guru = User::create([
+                'name' => 'Guru ' . $index,
                 'password' => Hash::make('123456'),
-                'birth_date' => '1985-0' . ($index + 1) . '-15',
+                'birth_date' => '1985-0' . $index . '-15',
                 'gender' => $index % 2 === 0 ? 'L' : 'P',
-                'group_id' => $group->id,
                 'level' => 2,
             ]);
+
+            // Attach guru ke 1-2 group secara acak (optional)
+            $guru->groups()->attach($groups->random(rand(1, min(2, $groups->count())))->pluck('id'));
         }
     }
 }

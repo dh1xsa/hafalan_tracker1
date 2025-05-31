@@ -13,11 +13,13 @@ class Student extends Model
 
     protected $fillable = [
         'group_id',
+        'user_id', // tambahkan ini
         'name',
         'password',
         'birth_date',
         'gender',
     ];
+
 
     public function group()
     {
@@ -27,5 +29,15 @@ class Student extends Model
     public function hafalans()
     {
         return $this->hasMany(Hafalan::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 }

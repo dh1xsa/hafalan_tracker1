@@ -15,13 +15,17 @@ class Group extends Model
         'groups_name',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    public function users()
+{
+    return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
+}
 
     public function students()
     {
         return $this->hasMany(Student::class); // default foreign key: group_id
+    }
+    public function guru()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

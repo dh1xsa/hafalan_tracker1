@@ -9,17 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentLoginController extends Controller
 {
-    /**
-     * Tampilkan halaman login siswa
-     */
+
     public function showLogin()
     {
         return view('auth.studentLogin');
     }
 
-    /**
-     * Proses login siswa
-     */
     public function login(Request $request)
     {
         // Validasi input
@@ -39,14 +34,11 @@ class StudentLoginController extends Controller
         return redirect('/student-dashboard')->with('success', 'Login berhasil! Selamat datang, ' . $student->name);
     }
 
-    /**
-     * Proses logout siswa
-     */
     public function logout()
     {
         session()->forget('student_id');
         return redirect('/')->with('success', 'Anda telah logout.');
     }
 
-   
+
 }
