@@ -11,21 +11,29 @@
         <table class="min-w-full table-auto border border-gray-300">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-2 text-left">Nama Murid</th>
-                    <th class="px-4 py-2 text-left">Hafalan</th>
-                    <th class="px-4 py-2 text-left">Catatan</th>
-                    <th class="px-4 py-2 text-left">Tanggal</th>
-                    <th class="px-4 py-2 text-left">Aksi</th>
+                    <th class="px-4 py-2 text-left border">Nama Murid</th>
+                    <th class="px-4 py-2 text-left border">Kelas</th>
+                    <th class="px-4 py-2 text-left border">Tanggal Lahir</th>
+                    <th class="px-4 py-2 text-left border">Jenis Kelamin</th>
+                    <th class="px-4 py-2 text-left border">Hafalan</th>
+                    <th class="px-4 py-2 text-left border">Catatan</th>
+                    <th class="px-4 py-2 text-left border">Tanggal</th>
+                    <th class="px-4 py-2 text-left border">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($hafalan as $data)
-                    <tr class="border-t">
-                        <td class="px-4 py-2">{{ $data->student->name }}</td>
-                        <td class="px-4 py-2">{{ $data->hafalan }}</td>
-                        <td class="px-4 py-2">{{ $data->description }}</td>
-                        <td class="px-4 py-2">{{ $data->date }}</td>
-                        <td class="px-4 py-2 flex gap-2">
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-2 border">{{ $data->student->name }}</td>
+                        <td class="px-4 py-2 border">{{ $data->student->group->groups_name ?? '-' }}</td>
+                        <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($data->student->birth_date)->format('d-m-Y') }}</td>
+                        <td class="px-4 py-2 border">
+                            {{ $data->student->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}
+                        </td>
+                        <td class="px-4 py-2 border">{{ $data->hafalan }}</td>
+                        <td class="px-4 py-2 border">{{ $data->description }}</td>
+                        <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}</td>
+                        <td class="px-4 py-2 border flex gap-2">
                             <form action="{{ route('hafalan-destroy', $data->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                 @csrf
                                 @method('DELETE')
