@@ -4,18 +4,20 @@
     <h1 class="text-2xl font-bold mb-4">Kelola Murid</h1>
 
     <!-- Notifikasi -->
-    <div class="mb-6">
-        @if (session('success'))
-            <p class="text-green-600">{{ session('success') }}</p>
-        @elseif(session('error'))
-            <p class="text-red-600">{{ session('error') }}</p>
-        @endif
-    </div>
+    @if (session('success'))
+        <div class="mb-4 text-green-600">
+            {{ session('success') }}
+        </div>
+    @elseif (session('error'))
+        <div class="mb-4 text-red-600">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <!-- Form Tambah Murid -->
     <div class="bg-white p-6 rounded shadow mb-8 max-w-xl">
         <h2 class="text-lg font-semibold mb-4">Tambah Murid Baru</h2>
-        <form action="{{ route('admin-student-store') }}" method="POST" class="space-y-4">
+        <form id="formTambahMurid" action="{{ route('admin-student-store') }}" method="POST" class="space-y-4">
             @csrf
             <div>
                 <label class="block mb-1 font-medium">Pilih Guru</label>
@@ -82,10 +84,7 @@
                         @php
                             $group = $groups->firstWhere('id', $groupId);
                             $groupName = $group->groups_name ?? 'Kelas Tidak Diketahui';
-                            $guruNames =
-                                $group && $group->users->count()
-                                    ? $group->users->pluck('name')->join(', ')
-                                    : 'Guru Tidak Diketahui';
+                            $guruNames = $group && $group->users->count() ? $group->users->pluck('name')->join(', ') : 'Guru Tidak Diketahui';
                         @endphp
 
                         <tr class="bg-gray-100 border-t">
@@ -101,12 +100,42 @@
                                 <td class="px-4 py-2"></td>
                                 <td class="px-4 py-2">{{ $data->name }}</td>
                                 <td class="px-4 py-2 space-x-2">
-                                    <button onclick="showDetailModal({{ $data->id }})"
-                                        class="text-purple-600 hover:underline">Lihat Detail</button>
+                                    <button onclick="showModal('modalSiswa{{ $data->id }}')"
+                                        class="text-purple-600 hover:underline">
+                                        Lihat Detail
+                                    </button>
                                     <a href="{{ route('admin-student-edit', $data->id) }}"
                                         class="text-blue-600 hover:underline">Ubah Data</a>
                                 </td>
                             </tr>
+
+                            <!-- Modal Detail Siswa -->
+                            <div id="modalSiswa{{ $data->id }}"
+                                class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+                                <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative mx-auto mt-10">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="text-xl font-bold">Detail Murid: {{ $data->name }}</h3>
+                                        <button onclick="closeModal('modalSiswa{{ $data->id }}')"
+                                            class="text-gray-600 hover:text-black text-2xl font-bold">
+                                            &times;
+                                        </button>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <p><strong>Nama:</strong> {{ $data->name }}</p>
+                                        <p><strong>Kelas Hafalan:</strong> {{ $data->group->groups_name ?? '-' }}</p>
+                                        <p><strong>Guru Pengajar:</strong>
+                                            @if ($data->group && $data->group->users && $data->group->users->isNotEmpty())
+                                                {{ $data->group->users->pluck('name')->join(', ') }}
+                                            @else
+                                                Tidak ada guru
+                                            @endif
+                                        </p>
+                                        <p><strong>Tanggal Lahir:</strong> {{ $data->birth_date }}</p>
+                                        <p><strong>Jenis Kelamin:</strong>
+                                            {{ $data->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     @empty
                         <tr>
@@ -118,48 +147,18 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white w-full max-w-md p-6 rounded shadow-lg relative">
-            <button onclick="closeDetailModal()"
-                class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl font-bold">
-                &times;
-            </button>
-            <h3 class="text-xl font-semibold mb-4">Detail Murid</h3>
-            <div id="detailContent">
-                <p class="text-gray-500 text-center">Memuat data...</p>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function showDetailModal(studentId) {
-            document.getElementById('detailModal').classList.remove('hidden');
-            document.getElementById('detailContent').innerHTML =
-                '<p class="text-gray-500 text-center">Memuat data...</p>';
-
-            fetch(`/admin/student/${studentId}`)
-                .then(res => res.json())
-                .then(data => {
-                    const html = `
-                    <p><strong>Nama:</strong> ${data.name}</p>
-                    <p><strong>Tanggal Lahir:</strong> ${data.birth_date}</p>
-                    <p><strong>Jenis Kelamin:</strong> ${data.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</p>
-                    <p><strong>Guru Penanggung Jawab:</strong> ${data.guru_name}</p>
-                `;
-                    document.getElementById('detailContent').innerHTML = html;
-                })
-                .catch(() => {
-                    document.getElementById('detailContent').innerHTML =
-                        '<p class="text-red-500 text-center">Gagal memuat data.</p>';
-                });
+        function showModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
         }
 
-        function closeDetailModal() {
-            document.getElementById('detailModal').classList.add('hidden');
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const guruSelect = document.getElementById('user_id');
             const groupSelect = document.getElementById('group_id');
 

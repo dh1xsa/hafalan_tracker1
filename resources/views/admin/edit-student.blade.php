@@ -8,20 +8,24 @@
             @csrf
             @method('PUT')
 
+            <!-- Pilih Guru -->
             <div>
-                <label class="block font-medium mb-1">Guru Penanggung Jawab</label>
-                <select name="group_id" class="w-full border rounded px-3 py-2">
-                    @foreach ($user as $data)
-                        <option value="{{ $data->group_id }}" {{ $student->group_id == $data->group_id ? 'selected' : '' }}>
-                            {{ $data->name }}
-                        </option>
+                <label class="block mb-1 font-medium">Pilih Guru</label>
+                <select name="user_id" id="user_id" class="w-full border rounded px-3 py-2" required>
+                    <option value="" disabled selected>Pilih Guru</option>
+                    @foreach ($guru as $g)
+                        <option value="{{ $g->id }}" {{ $g->id == $selectedGuruId ? 'selected' : '' }}>
+                            {{ $g->name }}</option>
                     @endforeach
                 </select>
             </div>
 
+            <!-- Pilih Kelas -->
             <div>
-                <label class="block font-medium mb-1">Nama Murid</label>
-                <input type="text" name="name" value="{{ $student->name }}" class="w-full border rounded px-3 py-2">
+                <label class="block mb-1 font-medium">Kelas</label>
+                <select name="group_id" id="group_id" class="w-full border rounded px-3 py-2" required>
+                    <option value="" disabled selected>Pilih Guru Terlebih Dahulu</option>
+                </select>
             </div>
 
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
@@ -29,11 +33,48 @@
             </button>
         </form>
 
-        <!-- Notifikasi -->
         @if (session('success'))
             <p class="mt-4 text-green-600">{{ session('success') }}</p>
         @elseif(session('error'))
             <p class="mt-4 text-red-600">{{ session('error') }}</p>
         @endif
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userSelect = document.getElementById('user_id');
+            const groupSelect = document.getElementById('group_id');
+            const selectedGroupId = "{{ old('group_id', $student->group_id ?? '') }}";
+
+            function loadGroups(userId) {
+                fetch(`/get-groups-by-guru/${userId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Groups fetched:", data); // Debug log
+                        groupSelect.innerHTML = '<option value="" disabled selected>Pilih Kelas</option>';
+                        data.forEach(group => {
+                            const option = document.createElement('option');
+                            option.value = group.id;
+                            option.text = group.name;
+                            if (group.id == selectedGroupId) {
+                                option.selected = true;
+                            }
+                            groupSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching groups:', error));
+            }
+
+            // Load jika sudah ada guru terpilih
+            if (userSelect.value) {
+                loadGroups(userSelect.value);
+            }
+
+            userSelect.addEventListener('change', function() {
+                loadGroups(this.value);
+            });
+        });
+    </script>
 @endsection

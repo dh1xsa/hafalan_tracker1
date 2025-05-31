@@ -117,25 +117,29 @@ class adminController extends Controller
     public function student_edit($id)
     {
         $student = Student::findOrFail($id);
-        $user = User::where('level', 2)->get();
-        return view('admin.edit-student', compact('student', 'user'));
+
+        // Ambil semua guru (level 2)
+        $guru = User::where('level', 2)->get();
+
+        // Ambil user_id dari guru yang terkait dengan group_id murid
+        $groupGuru = Group::find($student->group_id)?->users()?->first()?->id ?? null;
+
+        return view('admin.edit-student', [
+            'student' => $student,
+            'guru' => $guru,
+            'selectedGuruId' => $groupGuru,
+        ]);
     }
 
     public function student_update(Request $request, $id)
     {
         $request->validate([
-            'user_id'    => 'required|exists:users,id',
-            'name'       => 'required|string|max:255',
-            'birth_date' => 'required|date',
-            'gender'     => 'required|in:L,P',
+            'group_id' => 'required|exists:groups,id',
         ]);
 
         $student = Student::findOrFail($id);
         $student->update([
-            'user_id'    => $request->user_id,
-            'name'       => $request->name,
-            'birth_date' => $request->birth_date,
-            'gender'     => $request->gender,
+            'group_id' => $request->group_id,
         ]);
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
