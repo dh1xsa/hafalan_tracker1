@@ -11,11 +11,19 @@ class studentController extends Controller
 {
     public function dashboard()
     {
-        $student = Student::where('id', session('student_id'))->get();
-        $hafalan = Hafalan::where('student_id', session('student_id'))->get();
-        $groups = Group::all();  // <-- jangan lupa ini
-        return view('student.dashboard', compact('student', 'hafalan', 'groups'));
+        $students = Student::with('group.users') // penting untuk eager load guru
+            ->where('id', session('student_id'))
+            ->get();
+
+        $hafalan = Hafalan::with('student') // supaya bisa akses $item->student->name
+            ->where('student_id', session('student_id'))
+            ->get();
+
+        $groups = Group::with('users')->get();
+
+        return view('student.dashboard', compact('students', 'hafalan', 'groups'));
     }
+
 
     public function search(Request $request)
     {
