@@ -102,12 +102,14 @@ class adminController extends Controller
         ]);
 
         Student::create([
+            'user_id'    => $request->user_id, // tambahkan ini!
             'group_id'   => $request->group_id,
             'name'       => $request->name,
             'password'   => bcrypt($request->password),
             'birth_date' => $request->birth_date,
             'gender'     => $request->gender,
         ]);
+
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Murid berhasil ditambahkan.');
     }
