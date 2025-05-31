@@ -63,9 +63,15 @@ class adminController extends Controller
     // masuk student
     public function student_dashboard()
     {
-        $guru = User::where('level', 2)->get()->keyBy('group_id');
+        // Ambil guru yang memang punya relasi ke grup (melalui pivot group_user)
+        $guru = User::where('level', 2)
+            ->whereHas('groups') // hanya guru yang punya relasi ke group_user
+            ->with('groups')     // load relasi agar bisa dipakai langsung di view
+            ->get();
+
         $groups = Group::orderBy('groups_name')->get();
 
+        // Ambil murid dan kelompokkan berdasarkan group_id
         $students = Student::orderBy('group_id')
             ->orderBy('name')
             ->get()
@@ -76,8 +82,11 @@ class adminController extends Controller
 
     public function getGroupsByGuru($user_id)
     {
-        $guru = User::findOrFail($user_id);
-        $groups = $guru->groups()->select('id', 'groups_name')->get(); // many-to-many relasi
+        // Ambil semua grup yang memiliki user (guru) ini
+        $groups = Group::whereHas('users', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        })->get();
+
         return response()->json($groups);
     }
 
