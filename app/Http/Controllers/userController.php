@@ -20,20 +20,24 @@ class userController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_id' => 'required',
+            'student_id' => 'required|exists:students,id',
             'hafalan' => 'required',
             'description' => 'required',
             'date' => 'required|date',
         ]);
 
-        $validated['user_id'] = session('user_id');
+        $student = \App\Models\Student::find($validated['student_id']);
 
-        if (hafalan::create($validated)) {
+        $validated['user_id'] = session('user_id');
+        $validated['group_id'] = $student->group_id; // <--- tambahkan ini
+
+        if (\App\Models\hafalan::create($validated)) {
             return redirect()->route('user-dashboard')->with('success', 'Data berhasil diperbarui');
         }
 
         return back()->with('error', 'Gagal memperbarui data');
     }
+
 
     public function show($student_id)
     {

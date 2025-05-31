@@ -13,8 +13,8 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('group_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->string('name');
             $table->string('password');
             $table->date('birth_date');

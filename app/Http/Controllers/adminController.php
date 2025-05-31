@@ -64,7 +64,7 @@ class adminController extends Controller
     public function student_dashboard()
     {
         $guru = User::where('level', 2)->get()->keyBy('group_id');
-        $groups = Group::orderBy('name')->get();
+        $groups = Group::orderBy('groups_name')->get();
 
         $students = Student::orderBy('group_id')
             ->orderBy('name')
@@ -73,6 +73,14 @@ class adminController extends Controller
 
         return view('admin.dashboard-student', compact('students', 'guru', 'groups'));
     }
+
+    public function getGroupsByGuru($user_id)
+    {
+        $guru = User::findOrFail($user_id);
+        $groups = $guru->groups()->select('id', 'groups_name')->get(); // many-to-many relasi
+        return response()->json($groups);
+    }
+
     public function student_store(Request $request)
     {
         $request->validate([

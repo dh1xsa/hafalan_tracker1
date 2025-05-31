@@ -30,10 +30,8 @@
 
             <div>
                 <label class="block mb-1 font-medium">Kelas</label>
-                <select name="group_id" class="w-full border rounded px-3 py-2">
-                    @foreach ($groups as $group)
-                        <option value="{{ $group->id }}">{{ $group->name }}</option>
-                    @endforeach
+                <select name="group_id" id="group_id" class="w-full border rounded px-3 py-2">
+                    <option value="" disabled selected>Pilih Guru Terlebih Dahulu</option>
                 </select>
             </div>
 
@@ -129,31 +127,61 @@
             </div>
         </div>
     </div>
-    <script>
-        function showDetailModal(studentId) {
-            document.getElementById('detailModal').classList.remove('hidden');
-            document.getElementById('detailContent').innerHTML = '<p class="text-gray-500 text-center">Memuat data...</p>';
+   <script>
+    function showDetailModal(studentId) {
+        document.getElementById('detailModal').classList.remove('hidden');
+        document.getElementById('detailContent').innerHTML = '<p class="text-gray-500 text-center">Memuat data...</p>';
 
-            fetch(`/admin/student/${studentId}`)
-                .then(res => res.json())
-                .then(data => {
-                    const html = `
+        fetch(`/admin/student/${studentId}`)
+            .then(res => res.json())
+            .then(data => {
+                const html = `
                     <p><strong>Nama:</strong> ${data.name}</p>
                     <p><strong>Tanggal Lahir:</strong> ${data.birth_date}</p>
                     <p><strong>Jenis Kelamin:</strong> ${data.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</p>
                     <p><strong>Guru Penanggung Jawab:</strong> ${data.guru_name}</p>
                 `;
-                    document.getElementById('detailContent').innerHTML = html;
-                })
-                .catch(() => {
-                    document.getElementById('detailContent').innerHTML =
-                        '<p class="text-red-500 text-center">Gagal memuat data.</p>';
-                });
-        }
+                document.getElementById('detailContent').innerHTML = html;
+            })
+            .catch(() => {
+                document.getElementById('detailContent').innerHTML =
+                    '<p class="text-red-500 text-center">Gagal memuat data.</p>';
+            });
+    }
 
-        function closeDetailModal() {
-            document.getElementById('detailModal').classList.add('hidden');
-        }
-    </script>
+    function closeDetailModal() {
+        document.getElementById('detailModal').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const guruSelect = document.querySelector('select[name="user_id"]');
+        const groupSelect = document.getElementById('group_id');
+
+        guruSelect.addEventListener('change', function () {
+            const guruId = this.value;
+            groupSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+
+            fetch(`/get-groups-by-guru/${guruId}`)
+                .then(response => response.json())
+                .then(data => {
+                    groupSelect.innerHTML = '';
+                    if (data.length > 0) {
+                        data.forEach(group => {
+                            const option = document.createElement('option');
+                            option.value = group.id;
+                            option.textContent = group.groups_name;
+                            groupSelect.appendChild(option);
+                        });
+                    } else {
+                        groupSelect.innerHTML = '<option value="" disabled selected>Tidak ada kelas</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Gagal mengambil data grup:', error);
+                    groupSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                });
+        });
+    });
+</script>
 
 @endsection
