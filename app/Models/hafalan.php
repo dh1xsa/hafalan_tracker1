@@ -34,4 +34,8 @@ class Hafalan extends Model
     {
         return $this->belongsTo(Student::class);
     }
+    public function guru()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

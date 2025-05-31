@@ -18,21 +18,12 @@ return new class extends Migration
             $table->string('password');
             $table->date('birth_date');
             $table->enum('gender', ['L', 'P']);
-            $table->unsignedBigInteger('group_id')->nullable(); // Tambahan kolom group_id
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['group_id']);
-        });
-
         Schema::dropIfExists('users');
     }
 };

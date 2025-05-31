@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Student;
-use App\Models\User;
+use App\Models\Group;
 use Illuminate\Support\Facades\Hash;
 
 class StudentSeeder extends Seeder
@@ -13,13 +13,13 @@ class StudentSeeder extends Seeder
     {
         $names = ['Adit', 'Angga', 'Rina', 'Salsa', 'Budi'];
 
-        // Ambil semua guru (level 2) yang punya group_id
-        $gurus = User::where('level', 2)->whereNotNull('group_id')->get();
+        // Ambil semua groups
+        $groups = Group::all();
 
-        foreach ($gurus as $guru) {
+        foreach ($groups as $group) {
             foreach ($names as $name) {
                 Student::create([
-                    'group_id' => $guru->group_id, // foreign key ke tabel groups
+                    'group_id' => $group->id, // foreign key ke tabel groups
                     'name' => $name,
                     'password' => Hash::make('123456'),
                     'birth_date' => '2010-01-01',

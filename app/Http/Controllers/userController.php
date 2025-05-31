@@ -5,21 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\hafalan;
-use App\Models\Group;
-use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class userController extends Controller
 {
     public function dashboard()
-{
-    $student = Student::where('user_id', session('user_id'))->with('user')->get();
-    $hafalan = Hafalan::where('user_id', session('user_id'))->with('user', 'student')->get();
-    $groups = Group::all();
+    {
+        $students = Student::where('user_id', session('user_id'))->orderBy('name')->get();
+        $hafalan = Hafalan::where('user_id', session('user_id'))->with('student')->get();
 
-    return view('user.dashboard', compact('student', 'hafalan'));
-}
-
+        return view('user.dashboard', compact('students', 'hafalan'));
+    }
 
     public function store(Request $request)
     {
@@ -82,7 +78,6 @@ class userController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
-
 
     public function exportPDF($student_id)
     {

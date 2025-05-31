@@ -42,7 +42,6 @@ class studentController extends Controller
         return view('student.edit', compact('student', 'groups'));  // <-- kirim variabel groups ke view
     }
 
-
     public function update(Request $request, $id)
     {
         $student = Student::where('id', $id)->first();

@@ -3,23 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\student;
-use App\Models\user;
-use App\Models\group;
+use App\Models\Student;
+use App\Models\User;
+use App\Models\Group;
 
 class adminController extends Controller
 {
     public function dashboard()
     {
-        // Ambil semua guru (user dengan level 2), indeks berdasarkan group_id
-        $user = User::where('level', 2)->get()->keyBy('group_id');
-        $user = User::where('level', 2)->with('group')->get();
-        $student = Student::orderBy('group_id')->orderBy('name')->get()->groupBy('group_id');
+        $users = User::where('level', 2)->with('groups')->get();
         $groups = Group::all();
 
-        return view('admin.dashboard-user', compact('user', 'student', 'groups'));
+        return view('admin.dashboard-user', compact('users', 'groups'));
     }
-
 
     public function store(Request $request)
     {
@@ -27,25 +23,25 @@ class adminController extends Controller
             'name' => 'required|max:100',
             'password' => 'required|min:6',
             'birth_date' => 'required|date',
-            'group_id' => 'required|exists:groups,id',
+            'gender' => 'required|in:L,P',
         ]);
 
-        $validated['level'] = 2;
-        $validated['password'] = bcrypt($validated['password']); // agar password terenkripsi
+        User::create([
+            'name' => $validated['name'],
+            'password' => bcrypt($validated['password']),
+            'birth_date' => $validated['birth_date'],
+            'gender' => $validated['gender'],
+            'level' => 2,
+        ]);
 
-        $validated['level'] = 2;
-
-        if (user::create($validated)) {
-            return redirect()->route('admin-user-dashboard')->with('success', 'Data berhasil diperbarui');
-        }
-
-        return back()->with('error', 'Gagal memperbarui data');
+        return redirect()->route('admin-user-dashboard')->with('success', 'Guru berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        $groups = Group::all(); // Tambahkan ini
+        $groups = Group::all(); // Ambil semua kelas
+
         return view('admin.edit-user', compact('user', 'groups'));
     }
 
@@ -64,41 +60,32 @@ class adminController extends Controller
         return redirect()->route('admin-user-dashboard')->with('success', 'Data berhasil diperbarui');
     }
 
+    // masuk student
     public function student_dashboard()
     {
-        // Ambil semua guru (user level 2), lalu indeks berdasarkan group_id
-        $guru = user::where('level', 2)->get()->keyBy('group_id');
+        $guru = User::where('level', 2)->get()->keyBy('group_id');
+        $groups = Group::orderBy('name')->get();
 
-        // Ambil semua siswa, lalu kelompokkan berdasarkan group_id
-        $students = student::orderBy('group_id')
+        $students = Student::orderBy('group_id')
             ->orderBy('name')
             ->get()
             ->groupBy('group_id');
 
-        return view('admin.dashboard-student', compact('students', 'guru'));
+        return view('admin.dashboard-student', compact('students', 'guru', 'groups'));
     }
-
     public function student_store(Request $request)
     {
         $request->validate([
             'user_id'    => 'required|exists:users,id',
+            'group_id'   => 'required|exists:groups,id',
             'name'       => 'required|string|max:255',
             'password'   => 'required|string|min:6',
             'birth_date' => 'required|date',
             'gender'     => 'required|in:L,P',
         ]);
 
-        // Ambil data guru
-        $guru = User::findOrFail($request->user_id);
-
-        // Pastikan guru punya group_id
-        if (!$guru->group_id) {
-            return back()->with('error', 'Guru belum memiliki grup.');
-        }
-
-        // Simpan murid dengan group_id dari guru
         Student::create([
-            'group_id'   => $guru->group_id,
+            'group_id'   => $request->group_id,
             'name'       => $request->name,
             'password'   => bcrypt($request->password),
             'birth_date' => $request->birth_date,
@@ -134,24 +121,31 @@ class adminController extends Controller
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
     }
-
+    // masuk ke group
     public function group_dashboard()
     {
-        $groups = Group::all();
-        return view('admin.dashboard-group', compact('groups'));
+        $groups = Group::with('users')->get();
+        $users = User::where('level', 2)->get();
+
+        return view('admin.dashboard-group', compact('groups', 'users'));
     }
 
     public function group_store(Request $request)
     {
         $validated = $request->validate([
             'groups_name' => 'required|max:20',
+            'user_id' => 'required|exists:users,id'
         ]);
 
-        if (Group::create($validated)) {
-            return redirect()->route('admin-group-dashboard')->with('success', 'Data berhasil diperbarui');
-        }
+        // Buat grupnya dulu
+        $group = Group::create([
+            'groups_name' => $validated['groups_name'],
+        ]);
 
-        return back()->with('error', 'Gagal memperbarui data');
+        // Tambahkan guru ke pivot table
+        $group->users()->attach($validated['user_id']);
+
+        return redirect()->route('admin-group-dashboard')->with('success', 'Kelas berhasil dibuat');
     }
 
     public function group_destroy($id)

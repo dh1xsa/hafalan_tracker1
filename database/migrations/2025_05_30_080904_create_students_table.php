@@ -20,12 +20,8 @@ class CreateStudentsTable extends Migration
             $table->date('birth_date');
             $table->enum('gender', ['L', 'P']);
             $table->timestamps();
-            $table->foreign('group_id')
-                ->references('id')->on('groups')
-                ->onDelete('set null');
-            $table->foreign('user_id')
-                ->references('id')->on('users')
-                ->onDelete('set null');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

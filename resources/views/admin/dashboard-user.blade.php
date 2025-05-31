@@ -17,6 +17,8 @@
         Tambah Guru
     </button>
 
+
+
     <!-- Form Tambah Guru (default hidden) -->
     <div id="formTambahGuru" class="bg-white p-6 rounded shadow mb-8 max-w-xl hidden">
         <h2 class="text-lg font-semibold mb-4">Tambah Guru Baru</h2>
@@ -45,19 +47,10 @@
                 <label class="block mb-1 font-medium">Jenis Kelamin</label>
                 <select name="gender" class="w-full border rounded px-3 py-2" required>
                     <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
                 </select>
-            </div>
 
-            <div>
-                <label class="block mb-1 font-medium">Kelas</label>
-                <select name="group_id" class="w-full border rounded px-3 py-2" required>
-                    <option value="" disabled selected>Pilih Kelas</option>
-                    @foreach ($groups as $group)
-                        <option value="{{ $group->id }}">{{ $group->groups_name }}</option>
-                    @endforeach
-                </select>
             </div>
 
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
@@ -68,27 +61,21 @@
 
     <!-- Tabel Data Guru -->
     <div class="bg-white p-6 rounded shadow">
-        <h2 class="text-lg font-semibold mb-4">Daftar Guru Pengajar</h2>
+        <h2 class="text-lg font-semibold mb-4">Daftar Guru & Kelas</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full table-auto border border-gray-300">
                 <thead class="bg-gray-200">
                     <tr>
                         <th class="px-4 py-2 text-left">Nama Guru</th>
-                        <th class="px-4 py-2 text-left">Kelas</th>
                         <th class="px-4 py-2 text-left">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($user as $guru)
+                    @forelse ($users as $guru)
                         <tr class="border-t">
                             <td class="px-4 py-2">{{ $guru->name }}</td>
-                            <td class="px-4 py-2">{{ $guru->group ? $guru->group->groups_name : '-' }}</td>
-                            <td class="px-4 py-2 flex space-x-2">
-                                <button onclick="showDetail({{ json_encode($guru) }})"
-                                    class="text-green-600 hover:underline">Lihat Detail</button>
-                                <span>|</span>
-                                <a href="{{ route('admin-user-edit', $guru->id) }}"
-                                    class="text-blue-600 hover:underline">Ubah Nama</a>
+                            <td class="px-4 py-2">
+                                <a href="#" class="text-blue-600 hover:underline">Lihat Detail</a>
                             </td>
                         </tr>
                     @empty
