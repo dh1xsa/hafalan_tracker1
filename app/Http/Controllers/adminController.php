@@ -63,9 +63,15 @@ class adminController extends Controller
     // masuk student
     public function student_dashboard()
     {
-        $guru = User::where('level', 2)->get()->keyBy('group_id');
-        $groups = Group::orderBy('name')->get();
+        // Ambil guru yang memang punya relasi ke grup (melalui pivot group_user)
+        $guru = User::where('level', 2)
+            ->whereHas('groups') // hanya guru yang punya relasi ke group_user
+            ->with('groups')     // load relasi agar bisa dipakai langsung di view
+            ->get();
 
+        $groups = Group::orderBy('groups_name')->get();
+
+        // Ambil murid dan kelompokkan berdasarkan group_id
         $students = Student::orderBy('group_id')
             ->orderBy('name')
             ->get()
@@ -73,6 +79,17 @@ class adminController extends Controller
 
         return view('admin.dashboard-student', compact('students', 'guru', 'groups'));
     }
+
+    public function getGroupsByGuru($user_id)
+    {
+        // Ambil semua grup yang memiliki user (guru) ini
+        $groups = Group::whereHas('users', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        })->get();
+
+        return response()->json($groups);
+    }
+
     public function student_store(Request $request)
     {
         $request->validate([
@@ -85,12 +102,14 @@ class adminController extends Controller
         ]);
 
         Student::create([
+            'user_id'    => $request->user_id, // tambahkan ini!
             'group_id'   => $request->group_id,
             'name'       => $request->name,
             'password'   => bcrypt($request->password),
             'birth_date' => $request->birth_date,
             'gender'     => $request->gender,
         ]);
+
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Murid berhasil ditambahkan.');
     }

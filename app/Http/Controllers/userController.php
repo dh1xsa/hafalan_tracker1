@@ -11,28 +11,47 @@ class userController extends Controller
 {
     public function dashboard()
     {
-        $students = Student::where('user_id', session('user_id'))->orderBy('name')->get();
-        $hafalan = Hafalan::where('user_id', session('user_id'))->with('student')->get();
+        $userId = session('user_id');
 
-        return view('user.dashboard', compact('students', 'hafalan'));
+        // Ambil semua grup yang dimiliki guru (user) ini, beserta murid-muridnya
+        $groups = \App\Models\Group::whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })
+            ->with(['students' => function ($query) use ($userId) {
+                $query->where('user_id', $userId)->orderBy('name');
+            }])
+            ->orderBy('groups_name')
+            ->get();
+
+        // Hafalan milik guru, jika dibutuhkan
+        $hafalan = \App\Models\Hafalan::where('user_id', $userId)->with('student')->get();
+
+        return view('user.dashboard', compact('groups', 'hafalan'));
     }
+
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_id' => 'required',
-            'hafalan' => 'required',
-            'description' => 'required',
-            'date' => 'required|date',
+            'student_id'  => 'required|exists:students,id',
+            'hafalan'     => 'required|string',
+            'description' => 'required|string',
+            'date'        => 'required|date',
+            'status'      => 'required|in:belum,proses,selesai,perlu diulang',
+            'score'       => 'nullable|integer|min:0|max:100',
         ]);
 
-        $validated['user_id'] = session('user_id');
+        $user_id = session('user_id');
+        $student = Student::where('id', $validated['student_id'])->where('user_id', $user_id)->firstOrFail();
 
-        if (hafalan::create($validated)) {
-            return redirect()->route('user-dashboard')->with('success', 'Data berhasil diperbarui');
+        $validated['user_id'] = $user_id;
+        $validated['group_id'] = $student->group_id;
+
+        if (Hafalan::create($validated)) {
+            return redirect()->route('user-dashboard')->with('success', 'Data berhasil disimpan.');
         }
 
-        return back()->with('error', 'Gagal memperbarui data');
+        return back()->with('error', 'Gagal menyimpan data.');
     }
 
     public function show($student_id)
@@ -99,7 +118,11 @@ class userController extends Controller
     public function search(Request $request)
     {
         $keyword = $request->query('q');
-        $students = \App\Models\Student::where('name', 'LIKE', "%{$keyword}%")->get();
+
+        $students = Student::where('user_id', session('user_id'))
+            ->where('name', 'LIKE', "%{$keyword}%")
+            ->orderBy('name')
+            ->get();
 
         return response()->json($students);
     }

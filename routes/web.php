@@ -59,4 +59,6 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::get('/admin-group-dashboard', [adminController::class, 'group_dashboard'])->name('admin-group-dashboard');
     Route::post('/admin-group-dashboard', [adminController::class, 'group_store'])->name('admin-group-store');
     Route::delete('/admin-group-dashboard/{id}', [adminController::class, 'group_destroy'])->name('admin-group-destroy');
+
+    Route::get('/get-groups-by-guru/{user_id}', [AdminController::class, 'getGroupsByGuru']);
 });

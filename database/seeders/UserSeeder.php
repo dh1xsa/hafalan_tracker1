@@ -32,9 +32,6 @@ class UserSeeder extends Seeder
                 'gender' => $index % 2 === 0 ? 'L' : 'P',
                 'level' => 2,
             ]);
-
-            // Attach guru ke 1-2 group secara acak (optional)
-            $guru->groups()->attach($groups->random(rand(1, min(2, $groups->count())))->pluck('id'));
         }
     }
 }

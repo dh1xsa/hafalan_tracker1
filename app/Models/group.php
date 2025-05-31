@@ -16,16 +16,12 @@ class Group extends Model
     ];
 
     public function users()
-{
-    return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
-}
+    {
+        return $this->belongsToMany(User::class, 'group_user');
+    }
 
     public function students()
     {
         return $this->hasMany(Student::class); // default foreign key: group_id
-    }
-    public function guru()
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 }
