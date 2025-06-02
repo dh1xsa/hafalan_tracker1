@@ -1,80 +1,93 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="max-w-xl mx-auto bg-white shadow p-6 rounded">
-        <h2 class="text-xl font-bold mb-4">Edit Data Murid</h2>
+<h1 class="text-2xl font-bold mb-4">Edit Data Murid</h1>
 
-        <form action="{{ route('admin-student-update', $student->id) }}" method="POST" class="space-y-4">
-            @csrf
-            @method('PUT')
+<form action="{{ route('admin-student-update', $student->id) }}" method="POST" class="space-y-4 max-w-xl bg-white p-6 rounded shadow">
+    @csrf
+    @method('PUT')
 
-            <!-- Pilih Guru -->
-            <div>
-                <label class="block mb-1 font-medium">Pilih Guru</label>
-                <select name="user_id" id="user_id" class="w-full border rounded px-3 py-2" required>
-                    <option value="" disabled selected>Pilih Guru</option>
-                    @foreach ($guru as $g)
-                        <option value="{{ $g->id }}" {{ $g->id == $selectedGuruId ? 'selected' : '' }}>
-                            {{ $g->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Pilih Kelas -->
-            <div>
-                <label class="block mb-1 font-medium">Kelas</label>
-                <select name="group_id" id="group_id" class="w-full border rounded px-3 py-2" required>
-                    <option value="" disabled selected>Pilih Guru Terlebih Dahulu</option>
-                </select>
-            </div>
-
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Update
-            </button>
-        </form>
-
-        @if (session('success'))
-            <p class="mt-4 text-green-600">{{ session('success') }}</p>
-        @elseif(session('error'))
-            <p class="mt-4 text-red-600">{{ session('error') }}</p>
-        @endif
+    <div>
+        <label class="block mb-1 font-medium">Pilih Guru</label>
+        <select name="user_id" id="user_id" class="w-full border rounded px-3 py-2" required>
+            <option value="" disabled>Pilih Guru</option>
+            @foreach ($guru as $g)
+            <option value="{{ $g->id }}" {{ $student->group && $g->groups->contains('id', $student->group_id) ? 'selected' : '' }}>
+                {{ $g->name }}
+            </option>
+            @endforeach
+        </select>
     </div>
-@endsection
 
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const userSelect = document.getElementById('user_id');
-            const groupSelect = document.getElementById('group_id');
-            const selectedGroupId = "{{ old('group_id', $student->group_id ?? '') }}";
+    <div>
+        <label class="block mb-1 font-medium">Kelas</label>
+        <select name="group_id" id="group_id" class="w-full border rounded px-3 py-2" required>
+            <!-- Akan diisi via JS -->
+        </select>
+    </div>
 
-            function loadGroups(userId) {
-                fetch(`/get-groups-by-guru/${userId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Groups fetched:", data); // Debug log
-                        groupSelect.innerHTML = '<option value="" disabled selected>Pilih Kelas</option>';
+    <div>
+        <label class="block mb-1 font-medium">Nama Murid</label>
+        <input type="text" name="name" value="{{ $student->name }}" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div>
+        <label class="block mb-1 font-medium">Tanggal Lahir</label>
+        <input type="date" name="birth_date" value="{{ $student->birth_date }}" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div>
+        <label class="block mb-1 font-medium">Jenis Kelamin</label>
+        <select name="gender" class="w-full border rounded px-3 py-2" required>
+            <option value="L" {{ $student->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
+            <option value="P" {{ $student->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
+        </select>
+    </div>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Simpan Perubahan
+    </button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const guruSelect = document.getElementById('user_id');
+        const groupSelect = document.getElementById('group_id');
+        const selectedGroupId = '{{ $student->group_id }}';
+
+        function loadGroups(guruId) {
+            groupSelect.innerHTML = '<option disabled selected>Memuat...</option>';
+            fetch(`/get-groups-by-guru/${guruId}`)
+                .then(res => res.json())
+                .then(data => {
+                    groupSelect.innerHTML = '';
+                    if (data.length > 0) {
                         data.forEach(group => {
-                            const option = document.createElement('option');
-                            option.value = group.id;
-                            option.text = group.name;
+                            const opt = document.createElement('option');
+                            opt.value = group.id;
+                            opt.textContent = group.groups_name;
                             if (group.id == selectedGroupId) {
-                                option.selected = true;
+                                opt.selected = true;
                             }
-                            groupSelect.appendChild(option);
+                            groupSelect.appendChild(opt);
                         });
-                    })
-                    .catch(error => console.error('Error fetching groups:', error));
-            }
+                    } else {
+                        groupSelect.innerHTML = '<option disabled selected>Tidak ada kelas</option>';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    groupSelect.innerHTML = '<option disabled selected>Gagal memuat data</option>';
+                });
+        }
 
-            // Load jika sudah ada guru terpilih
-            if (userSelect.value) {
-                loadGroups(userSelect.value);
-            }
+        if (guruSelect.value) {
+            loadGroups(guruSelect.value);
+        }
 
-            userSelect.addEventListener('change', function() {
-                loadGroups(this.value);
-            });
+        guruSelect.addEventListener('change', function() {
+            loadGroups(this.value);
         });
-    </script>
+    });
+</script>
 @endsection

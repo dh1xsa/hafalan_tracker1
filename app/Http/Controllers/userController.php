@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\hafalan;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class userController extends Controller
@@ -12,6 +13,8 @@ class userController extends Controller
     public function dashboard()
     {
         $userId = session('user_id');
+
+        $user = User::where('id', $userId)->get()->first();
 
         // Ambil semua grup yang dimiliki guru (user) ini, beserta murid-muridnya
         $groups = \App\Models\Group::whereHas('users', function ($query) use ($userId) {
@@ -26,7 +29,7 @@ class userController extends Controller
         // Hafalan milik guru, jika dibutuhkan
         $hafalan = \App\Models\Hafalan::where('user_id', $userId)->with('student')->get();
 
-        return view('user.dashboard', compact('groups', 'hafalan'));
+        return view('user.dashboard', compact('groups', 'hafalan', 'user'));
     }
 
 
@@ -38,7 +41,7 @@ class userController extends Controller
             'description' => 'required|string',
             'date'        => 'required|date',
             'status'      => 'required|in:belum,proses,selesai,perlu diulang',
-            'score'       => 'nullable|integer|min:0|max:100',
+            'score'       => 'required|integer|min:0|max:100',
         ]);
 
         $user_id = session('user_id');
@@ -70,11 +73,13 @@ class userController extends Controller
     // Proses update data
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'hafalan'     => 'required',
-            'description' => 'required',
+        $validated = $request->validate([
+            'student_id'  => 'required|exists:students,id',
+            'hafalan'     => 'required|string',
+            'description' => 'required|string',
+            'status'      => 'required|in:belum,proses,selesai,perlu diulang',
+            'score'       => 'nullable|integer|min:0|max:100',
             'date'        => 'required|date',
-            'student_id' => 'required',
         ]);
 
         $student_id = $request->student_id;
@@ -83,6 +88,8 @@ class userController extends Controller
         $hafalan->update([
             'hafalan'     => $request->hafalan,
             'description' => $request->description,
+            'status' => $request->status,
+            'score' => $request->score,
             'date'        => $request->date,
         ]);
 
