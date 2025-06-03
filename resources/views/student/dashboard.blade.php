@@ -12,6 +12,7 @@
         <br>
     @endforeach
 
+
     {{-- Hafalan --}}
     <h3 class="text-xl font-semibold mt-6 mb-2">Detail Hafalan</h3>
 

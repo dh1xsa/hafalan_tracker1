@@ -40,7 +40,7 @@ Route::middleware(['auth.user'])->group(function () {
 Route::middleware(['auth.student'])->group(function () {
     Route::post('/student-logout', [studentLoginController::class, 'logout'])->name('student-logout');
     Route::get('/student-dashboard', [studentController::class, 'dashboard'])->name('student-dashboard');
-    Route::resource('student', studentController::class);
+    Route::resource('/student', studentController::class);
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
 
 });

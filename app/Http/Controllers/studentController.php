@@ -71,6 +71,6 @@ class studentController extends Controller
         $data = Student::with(['group.users'])->findOrFail($id);
 
         // Tampilkan view 'student-profil' dengan data
-        return view('student-profil', compact('data'));
+        return view('student.student-profil', compact('data'));
     }
 }
