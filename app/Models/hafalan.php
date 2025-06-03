@@ -17,6 +17,8 @@ class Hafalan extends Model
         'student_id',
         'hafalan',
         'description',
+        'status',
+        'score',
         'date',
     ];
 

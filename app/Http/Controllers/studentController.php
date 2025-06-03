@@ -65,4 +65,12 @@ class studentController extends Controller
         $student->update($request->all());
         return redirect()->route('student-dashboard')->with('success', 'Profile berhasil di update');
     }
+    public function show($id)
+    {
+        // Ambil data murid beserta relasi group dan users
+        $data = Student::with(['group.users'])->findOrFail($id);
+
+        // Tampilkan view 'student-profil' dengan data
+        return view('student-profil', compact('data'));
+    }
 }

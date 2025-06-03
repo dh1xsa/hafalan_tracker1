@@ -41,6 +41,8 @@ Route::middleware(['auth.student'])->group(function () {
     Route::post('/student-logout', [studentLoginController::class, 'logout'])->name('student-logout');
     Route::get('/student-dashboard', [studentController::class, 'dashboard'])->name('student-dashboard');
     Route::resource('student', studentController::class);
+    Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
+
 });
 
 Route::middleware(['auth.admin'])->group(function () {
@@ -50,14 +52,18 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::post('/admin-user-dashboard', [adminController::class, 'store'])->name('admin-user-store');
     Route::get('/edit-user/{id}', [adminController::class, 'edit'])->name('admin-user-edit');
     Route::put('/edit-user/{id}', [adminController::class, 'update'])->name('admin-user-update');
+    Route::delete('/admin-user-dashboard/{id}', [adminController::class, 'destroy'])->name('admin-user-destroy');
     //
     Route::get('/admin-student-dashboard', [adminController::class, 'student_dashboard'])->name('admin-student-dashboard');
     Route::post('/admin-student-dashboard', [adminController::class, 'student_store'])->name('admin-student-store');
     Route::get('/edit-student/{id}', [adminController::class, 'student_edit'])->name('admin-student-edit');
     Route::put('/edit-student/{id}', [adminController::class, 'student_update'])->name('admin-student-update');
+    Route::delete('/admin-student-dashboard/{id}', [adminController::class, 'student_destroy'])->name('admin-student-destroy');
 
     Route::get('/admin-group-dashboard', [adminController::class, 'group_dashboard'])->name('admin-group-dashboard');
     Route::post('/admin-group-dashboard', [adminController::class, 'group_store'])->name('admin-group-store');
+    Route::get('/edit-group/{id}', [adminController::class, 'group_edit'])->name('admin-group-edit');
+    Route::put('/edit-group/{id}', [adminController::class, 'group_update'])->name('admin-group-update');
     Route::delete('/admin-group-dashboard/{id}', [adminController::class, 'group_destroy'])->name('admin-group-destroy');
 
     Route::get('/get-groups-by-guru/{user_id}', [AdminController::class, 'getGroupsByGuru']);

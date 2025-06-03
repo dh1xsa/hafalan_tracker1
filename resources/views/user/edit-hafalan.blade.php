@@ -6,10 +6,10 @@
 
 <!-- Notifikasi -->
 @if(session('success'))
-    <p class="text-green-600 mb-4">{{ session('success') }}</p>
+<p class="text-green-600 mb-4">{{ session('success') }}</p>
 @endif
 @if(session('error'))
-    <p class="text-red-600 mb-4">{{ session('error') }}</p>
+<p class="text-red-600 mb-4">{{ session('error') }}</p>
 @endif
 
 <!-- Form Edit -->
@@ -24,8 +24,24 @@
         </div>
 
         <div>
-            <label class="block font-medium mb-1">Deskripsi:</label>
+            <label class="block font-medium mb-1">Catatan:</label>
             <input type="text" name="description" value="{{ $hafalan->description }}" class="w-full border rounded px-3 py-2" required>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-1">Status:</label>
+            <select name="status" id="status" required class="w-full rounded px-3 py-2 border">
+                <option value="" disabled>Pilih Jenis Kelamin</option>
+                <option value="belum" {{ $hafalan->status == 'belum' ? 'selected' : '' }}>belum</option>
+                <option value="proses" {{ $hafalan->status == 'proses' ? 'selected' : '' }}>proses</option>
+                <option value="selesai" {{ $hafalan->status == 'selesai' ? 'selected' : '' }}>selesai</option>
+                <option value="perlu diulang" {{ $hafalan->status == 'perlu diulang' ? 'selected' : '' }}>perlu diulang</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-1">Nilai:</label>
+            <input type="text" name="score" value="{{ $hafalan->score }}" class="w-full border rounded px-3 py-2" required>
         </div>
 
         <div>

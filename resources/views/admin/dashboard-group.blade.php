@@ -46,7 +46,9 @@
                                 {{ $guru->name }}{{ !$loop->last ? ', ' : '' }}
                             @endforeach
                         </td>
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-2 space-x-2 flex justify-start border-b">
+                            <a href="{{ route('admin-group-edit', $group->id) }}"
+                            class="px-2 py-1 bg-yellow-500 hover:bg-yellow-700 rounded-sm font-medium text-white">Ubah Data</a>
                             <form action="{{ route('admin-group-destroy', $group->id) }}" method="POST"
                                 onsubmit="return confirm('Yakin ingin menghapus?')">
                                 @csrf

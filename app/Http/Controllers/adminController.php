@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\group_user;
 
 class adminController extends Controller
 {
@@ -50,16 +51,27 @@ class adminController extends Controller
     {
         $request->validate([
             'name'     => 'required',
+            'birth_date'     => 'required',
+            'gender'     => 'required',
         ]);
 
         $user = user::findOrFail($id);
         $user->update([
             'name'     => $request->name,
+            'birth_date'     => $request->birth_date,
+            'gender'     => $request->gender,
         ]);
 
         return redirect()->route('admin-user-dashboard')->with('success', 'Data berhasil diperbarui');
     }
 
+    public function destroy($id)
+    {
+        $user = user::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
     // masuk student
     public function student_dashboard()
     {
@@ -116,33 +128,56 @@ class adminController extends Controller
 
     public function student_edit($id)
     {
-        $student = Student::findOrFail($id);
+        $student = Student::with('group.users')->findOrFail($id);
 
-        // Ambil semua guru (level 2)
-        $guru = User::where('level', 2)->get();
+        // Ambil semua guru yang memiliki relasi ke grup
+        $guru = User::where('level', 2)
+            ->whereHas('groups')
+            ->with('groups')
+            ->get();
 
-        // Ambil user_id dari guru yang terkait dengan group_id murid
-        $groupGuru = Group::find($student->group_id)?->users()?->first()?->id ?? null;
+        // Ambil semua grup
+        $groups = Group::orderBy('groups_name')->get();
 
-        return view('admin.edit-student', [
-            'student' => $student,
-            'guru' => $guru,
-            'selectedGuruId' => $groupGuru,
-        ]);
+        return view('admin.edit-student', compact('student', 'guru', 'groups'));
     }
+
 
     public function student_update(Request $request, $id)
     {
         $request->validate([
-            'group_id' => 'required|exists:groups,id',
+            'user_id'     => 'required|exists:users,id',
+            'group_id'    => 'required|exists:groups,id',
+            'name'        => 'required|string|max:255',
+            'password'    => 'nullable|string|min:6', // opsional, hanya jika ingin diubah
+            'birth_date'  => 'required|date',
+            'gender'      => 'required|in:L,P',
         ]);
 
         $student = Student::findOrFail($id);
-        $student->update([
-            'group_id' => $request->group_id,
-        ]);
 
-        return redirect()->route('admin-student-dashboard')->with('success', 'Data berhasil diperbarui');
+        $student->user_id     = $request->user_id;
+        $student->group_id    = $request->group_id;
+        $student->name        = $request->name;
+        $student->birth_date  = $request->birth_date;
+        $student->gender      = $request->gender;
+
+        if ($request->filled('password')) {
+            $student->password = bcrypt($request->password);
+        }
+
+        $student->save();
+
+        return redirect()->route('admin-student-dashboard')->with('success', 'Data murid berhasil diperbarui.');
+    }
+
+
+    public function student_destroy($id)
+    {
+        $student = Student::findOrFail($id);
+        $student->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
     // masuk ke group
     public function group_dashboard()
@@ -169,6 +204,28 @@ class adminController extends Controller
         $group->users()->attach($validated['user_id']);
 
         return redirect()->route('admin-group-dashboard')->with('success', 'Kelas berhasil dibuat');
+    }
+
+    public function group_edit($id)
+    {
+        $group = group_user::with('group', 'user')->find($id);
+        $users = User::where('level', 2)->get();
+
+        return view('admin.edit-group', compact('group', 'users'));
+    }
+
+    public function group_update(Request $request, $id)
+    {
+        $request->validate([
+            'user_id' => 'required',
+        ]);
+
+        $group = group_user::findOrFail($id);
+        $group->update([
+            'user_id' => $request->user_id,
+        ]);
+
+        return redirect()->route('admin-group-dashboard')->with('success', 'Data berhasil diperbarui');
     }
 
     public function group_destroy($id)

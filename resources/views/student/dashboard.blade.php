@@ -6,36 +6,10 @@
     <h2 class="text-2xl font-semibold mb-4">Hafalanmu</h2>
 
     @foreach ($students as $data)
-        <p class="text-lg font-medium text-blue-700 cursor-pointer" data-bs-toggle="modal"
-            data-bs-target="#modalSiswa{{ $data->id }}">
+        <a href="{{ route('students.show', $data->id) }}" class="text-lg font-medium text-blue-700 hover:underline">
             {{ $data->name }}
-        </p>
-
-        <!-- Modal -->
-        <div class="modal fade" id="modalSiswa{{ $data->id }}" tabindex="-1"
-            aria-labelledby="modalSiswaLabel{{ $data->id }}" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalSiswaLabel{{ $data->id }}">Detail Murid: {{ $data->name }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                    </div>
-                    <div class="modal-body space-y-2">
-                        <p><strong>Nama:</strong> {{ $data->name }}</p>
-                        <p><strong>Kelas Hafalan:</strong> {{ $data->group->groups_name ?? '-' }}</p>
-                        <p><strong>Guru Pengajar:</strong>
-                            @if ($data->group && $data->group->users && $data->group->users->isNotEmpty())
-                                {{ $data->group->users->pluck('name')->join(', ') }}
-                            @else
-                                Tidak ada guru
-                            @endif
-                        </p>
-                        <p><strong>Tanggal Lahir:</strong> {{ $data->birth_date }}</p>
-                        <p><strong>Jenis Kelamin:</strong> {{ $data->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </a>
+        <br>
     @endforeach
 
     {{-- Hafalan --}}
@@ -70,5 +44,6 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+    </script>
 @endsection
