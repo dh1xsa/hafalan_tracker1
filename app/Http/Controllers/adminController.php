@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\group_user;
+use App\Models\Student_pure;
 
 class adminController extends Controller
 {
@@ -72,24 +73,26 @@ class adminController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
+
     // masuk student
     public function student_dashboard()
     {
-        // Ambil guru yang memang punya relasi ke grup (melalui pivot group_user)
+
         $guru = User::where('level', 2)
-            ->whereHas('groups') // hanya guru yang punya relasi ke group_user
-            ->with('groups')     // load relasi agar bisa dipakai langsung di view
+            ->whereHas('groups')
+            ->with('groups')
             ->get();
 
         $groups = Group::orderBy('groups_name')->get();
 
-        // Ambil murid dan kelompokkan berdasarkan group_id
         $students = Student::orderBy('group_id')
             ->orderBy('name')
             ->get()
             ->groupBy('group_id');
 
-        return view('admin.dashboard-student', compact('students', 'guru', 'groups'));
+        $studentsPure = Student_pure::all();
+
+        return view('admin.dashboard-student', compact('students', 'guru', 'groups','studentsPure'));
     }
 
     public function getGroupsByGuru($user_id)
@@ -108,20 +111,19 @@ class adminController extends Controller
             'user_id'    => 'required|exists:users,id',
             'group_id'   => 'required|exists:groups,id',
             'name'       => 'required|string|max:255',
-            'password'   => 'required|string|min:6',
+            'password'   => 'required|string|max:255', // Password harus diisi di form
             'birth_date' => 'required|date',
             'gender'     => 'required|in:L,P',
         ]);
 
         Student::create([
-            'user_id'    => $request->user_id, // tambahkan ini!
+            'user_id'    => $request->user_id,
             'group_id'   => $request->group_id,
             'name'       => $request->name,
-            'password' => $request->password,
+            'password'   => $request->password, // Simpan password apa adanya
             'birth_date' => $request->birth_date,
             'gender'     => $request->gender,
         ]);
-
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Murid berhasil ditambahkan.');
     }
@@ -130,28 +132,25 @@ class adminController extends Controller
     {
         $student = Student::with('group.users')->findOrFail($id);
 
-        // Ambil semua guru yang memiliki relasi ke grup
         $guru = User::where('level', 2)
             ->whereHas('groups')
             ->with('groups')
             ->get();
 
-        // Ambil semua grup
         $groups = Group::orderBy('groups_name')->get();
 
         return view('admin.edit-student', compact('student', 'guru', 'groups'));
     }
 
-
     public function student_update(Request $request, $id)
     {
         $request->validate([
-            'user_id'     => 'required|exists:users,id',
-            'group_id'    => 'required|exists:groups,id',
-            'name'        => 'required|string|max:255',
-            'password'    => 'nullable|string|min:6', // opsional, hanya jika ingin diubah
-            'birth_date'  => 'required|date',
-            'gender'      => 'required|in:L,P',
+            'user_id'    => 'required|exists:users,id',
+            'group_id'   => 'required|exists:groups,id',
+            'name'       => 'required|string|max:255',
+            'password'   => 'required|string|max:255', // Password tetap harus diisi manual oleh admin
+            'birth_date' => 'required|date',
+            'gender'     => 'required|in:L,P',
         ]);
 
         $student = Student::findOrFail($id);
@@ -159,18 +158,14 @@ class adminController extends Controller
         $student->user_id     = $request->user_id;
         $student->group_id    = $request->group_id;
         $student->name        = $request->name;
+        $student->password    = $request->password; // Tetap simpan
         $student->birth_date  = $request->birth_date;
         $student->gender      = $request->gender;
-
-        if ($request->filled('password')) {
-            $student->password = bcrypt($request->password);
-        }
 
         $student->save();
 
         return redirect()->route('admin-student-dashboard')->with('success', 'Data murid berhasil diperbarui.');
     }
-
 
     public function student_destroy($id)
     {
