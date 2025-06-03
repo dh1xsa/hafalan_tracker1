@@ -3,7 +3,6 @@
 @section('content')
 
 <h2 class="text-2xl font-bold mb-6">Edit Hafalan Murid</h2>
-
 <!-- Notifikasi -->
 @if(session('success'))
 <p class="text-green-600 mb-4">{{ session('success') }}</p>
@@ -19,8 +18,32 @@
         @method('PUT')
 
         <div>
-            <label class="block font-medium mb-1">Hafalan:</label>
-            <input type="text" name="hafalan" value="{{ $hafalan->hafalan }}" class="w-full border rounded px-3 py-2" required>
+            <div>
+                <label for="surah" class="block font-medium text-gray-700 mb-1">Surah</label>
+                <select name="surah" id="surah" class="w-full border rounded px-3 py-2" required>
+                    <option value="" disabled {{ old('surah', $surahNumber ?? '') == '' ? 'selected' : '' }}>Pilih surah</option>
+                    @foreach ($surahList as $g)
+                    <option value="{{ $g['number'] }}"
+                        data-ayah="{{ $g['numberOfAyahs'] }}"
+                        {{ old('surah', $surahNumber ?? '') == $g['number'] ? 'selected' : '' }}>
+                        {{ $g['englishName'] }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mt-4">
+                <label class="block font-medium text-gray-700 mb-1">Ayat</label>
+                <div class="flex justify-center items-center">
+                    <input type="number" name="startAyah" id="startAyah" value="{{ $startAyah }}"
+                        class="border border-black-300 rounded-md px-3 py-2 w-1/2 border-b" min="1">
+
+                    <span class="mx-2">Sampai</span>
+
+                    <input type="number" name="endAyah" id="endAyah" value="{{ $endAyah }}"
+                        class="border border-black-300 rounded-md px-3 py-2 w-1/2 border-b">
+                </div>
+                <p id="msg" class="text-red-500 text-sm mt-2"></p>
+            </div>
         </div>
 
         <div>
@@ -39,10 +62,6 @@
             </select>
         </div>
 
-        <div>
-            <label class="block font-medium mb-1">Nilai:</label>
-            <input type="text" name="score" value="{{ $hafalan->score }}" class="w-full border rounded px-3 py-2" required>
-        </div>
 
         <div>
             <label class="block font-medium mb-1">Tanggal:</label>

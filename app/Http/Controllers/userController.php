@@ -7,6 +7,7 @@ use App\Models\student;
 use App\Models\hafalan;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Http;
 
 class userController extends Controller
 {
@@ -29,7 +30,9 @@ class userController extends Controller
         // Hafalan milik guru, jika dibutuhkan
         $hafalan = \App\Models\Hafalan::where('user_id', $userId)->with('student')->get();
 
-        return view('user.dashboard', compact('groups', 'hafalan', 'user'));
+        $surah = Http::get('https://api.alquran.cloud/v1/surah')->json()['data'];
+
+        return view('user.dashboard', compact('groups', 'hafalan', 'user', 'surah'));
     }
 
 
@@ -37,18 +40,22 @@ class userController extends Controller
     {
         $validated = $request->validate([
             'student_id'  => 'required|exists:students,id',
-            'hafalan'     => 'required|string',
+            'surah'     => 'required|string',
+            'startAyah'   => 'required',
+            'endAyah'     => 'required',
             'description' => 'required|string',
             'date'        => 'required|date',
             'status'      => 'required|in:belum,proses,selesai,perlu diulang',
-            'score'       => 'required|integer|min:0|max:100',
         ]);
 
         $user_id = session('user_id');
-        $student = Student::where('id', $validated['student_id'])->where('user_id', $user_id)->firstOrFail();
+        $student = Student::where('id', $validated['student_id'])
+            ->where('user_id', $user_id)
+            ->firstOrFail();
 
         $validated['user_id'] = $user_id;
         $validated['group_id'] = $student->group_id;
+        $validated['hafalan'] = $request->surah . ':' . $request->startAyah . '-' . $request->endAyah;
 
         if (Hafalan::create($validated)) {
             return redirect()->route('user-dashboard')->with('success', 'Data berhasil disimpan.');
@@ -56,6 +63,7 @@ class userController extends Controller
 
         return back()->with('error', 'Gagal menyimpan data.');
     }
+
 
     public function show($student_id)
     {
@@ -67,34 +75,50 @@ class userController extends Controller
     public function edit($id)
     {
         $hafalan = Hafalan::findOrFail($id);
-        return view('user.edit-hafalan', compact('hafalan'));
+
+        // Ambil list surah dari API
+        $surahList = Http::get('https://api.alquran.cloud/v1/surah')->json()['data'];
+
+        // Pecah string hafalan menjadi bagian-bagian
+        $parts = explode(':', $hafalan->hafalan); // misal: ['2', '1-5']
+        $surahNumber = $parts[0] ?? '';
+        $ayahParts = explode('-', $parts[1] ?? '');
+        $startAyah = $ayahParts[0] ?? '';
+        $endAyah = $ayahParts[1] ?? '';
+
+        return view('user.edit-hafalan', compact('hafalan', 'surahList', 'surahNumber', 'startAyah', 'endAyah'));
     }
+
+
 
     // Proses update data
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'student_id'  => 'required|exists:students,id',
-            'hafalan'     => 'required|string',
+            'surah'       => 'required|integer',
+            'startAyah'   => 'required|integer|min:1',
+            'endAyah'     => 'required|integer|gte:startAyah',
             'description' => 'required|string',
             'status'      => 'required|in:belum,proses,selesai,perlu diulang',
-            'score'       => 'nullable|integer|min:0|max:100',
             'date'        => 'required|date',
         ]);
 
-        $student_id = $request->student_id;
-
         $hafalan = Hafalan::findOrFail($id);
+
         $hafalan->update([
-            'hafalan'     => $request->hafalan,
+            'student_id'  => $request->student_id,
+            'hafalan'       => $request->surah . ':' . $request->startAyah . '-' . $request->endAyah,
             'description' => $request->description,
-            'status' => $request->status,
-            'score' => $request->score,
+            'status'      => $request->status,
             'date'        => $request->date,
         ]);
 
-        return redirect()->route('student-detail', ['student_id' => $student_id])->with('success', 'Data berhasil diperbarui');
+        return redirect()
+            ->route('student-detail', ['student_id' => $request->student_id])
+            ->with('success', 'Data berhasil diperbarui');
     }
+
 
 
     public function destroy($id)
