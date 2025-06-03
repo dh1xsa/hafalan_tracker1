@@ -18,7 +18,6 @@ class Hafalan extends Model
         'hafalan',
         'description',
         'status',
-        'score',
         'date',
     ];
 
