@@ -19,7 +19,6 @@ return new class extends Migration
     $table->text('hafalan');
     $table->text('description');
     $table->enum('status', ['belum', 'proses', 'selesai', 'perlu diulang'])->default('belum');
-    $table->unsignedTinyInteger('score')->nullable(); // misalnya 0 - 100
 
     $table->date('date');
     $table->timestamps();

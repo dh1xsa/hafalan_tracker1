@@ -14,7 +14,6 @@
                     <th class="px-4 py-2 text-left border">Hafalan</th>
                     <th class="px-4 py-2 text-left border">Catatan</th>
                     <th class="px-4 py-2 text-left border">Status</th>
-                    <th class="px-4 py-2 text-left border">Nilai</th>
                     <th class="px-4 py-2 text-left border">Tanggal</th>
                     <th class="px-4 py-2 text-left border">Aksi</th>
                 </tr>
@@ -25,7 +24,6 @@
                         <td class="px-4 py-2 border">{{ $data->hafalan }}</td>
                         <td class="px-4 py-2 border">{{ $data->description }}</td>
                         <td class="px-4 py-2 border">{{ $data->status }}</td>
-                        <td class="px-4 py-2 border">{{ $data->score }}</td>
                         <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}</td>
                         <td class="px-4 py-2 border flex gap-2">
                             <form action="{{ route('hafalan-destroy', $data->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
