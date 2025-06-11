@@ -50,10 +50,9 @@
                     Dashboard
                 </a>
 
-                <a href="/students/1"
-                    class="block px-4 py-2 rounded hover:bg-gray-200 {{ request()->routeIs('students.*') ? 'bg-gray-100 font-semibold' : '' }}">
-                    Data Murid
-                </a>
+                 <a href="{{ route('students.show', $data->id) }}" class="block px-4 py-2 rounded hover:bg-gray-200">
+            Detail Profile
+        </a>
             </nav>
             <div class="p-4">
                 <button onclick="openLogoutModal()"

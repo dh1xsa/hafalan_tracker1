@@ -41,7 +41,7 @@
                 <select name="name" id="murid_select" class="w-full border rounded px-3 py-2">
                     <option value="">-- Pilih Murid --</option>
                     @foreach ($studentsPure as $s)
-                        <option value="{{ $s->id }}" data-birth="{{ $s->birth_date }}"
+                        <option value="{{ $s->name }}" data-birth="{{ $s->birth_date }}"
                             data-gender="{{ $s->gender }}">
                             {{ $s->name }}
                         </option>
